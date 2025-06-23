@@ -5,8 +5,11 @@ This project consists of the development of a reservation management system for 
 # Primary features
 
 -Reservation Creation
+
 -Availability Checking
+
 -Booking Management
+
 -Database integration for persistence
 
 
