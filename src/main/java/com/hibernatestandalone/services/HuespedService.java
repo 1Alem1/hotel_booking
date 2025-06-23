@@ -1,0 +1,13 @@
+package com.hibernatestandalone.services;
+
+import com.hibernatestandalone.entity.Huesped;
+import com.hibernatestandalone.services.AbstractService;
+import com.hibernatestandalone.util.HibernateUtil;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+
+public class HuespedService extends AbstractService {
+
+    
+}
