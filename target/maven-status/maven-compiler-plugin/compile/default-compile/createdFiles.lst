@@ -1,0 +1,7 @@
+com\hotel_booking\entity\Usuario.class
+com\hotel_booking\services\NotaService.class
+com\hotel_booking\services\UsuarioService.class
+com\hotel_booking\services\AbstractService.class
+com\hotel_booking\util\HibernateUtil.class
+com\hotel_booking\hotel_booking\App.class
+com\hotel_booking\entity\Nota.class
