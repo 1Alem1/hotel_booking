@@ -1,1 +1,8 @@
 target/
+lib/
+*.class
+*.jar
+*.log
+*.snap
+*.bin
+*.form
