@@ -2,9 +2,11 @@ package com.hibernatestandalone.pantallas;
 
 import com.hibernatestandalone.entity.Empleado;
 import com.hibernatestandalone.entity.Gerente;
+import com.hibernatestandalone.entity.Habitacion;
 import com.hibernatestandalone.entity.Usuario;
 import com.hibernatestandalone.services.EmpleadoService;
 import com.hibernatestandalone.services.GerenteService;
+import com.hibernatestandalone.services.HabitacionService;
 import com.hibernatestandalone.services.UsuarioService;
 import java.awt.Color;
 import java.awt.Font;
@@ -23,7 +25,8 @@ public class PantallaGerente extends javax.swing.JFrame {
     private Long idEmpleadoActual; 
     private final UsuarioService usuarioService = new UsuarioService();
     private final GerenteService gerenteService = new GerenteService();
-    private TableRowSorter<DefaultTableModel> sorter;
+    private TableRowSorter<DefaultTableModel> sorterEmpleados;
+    private TableRowSorter<DefaultTableModel> sorterHabitaciones;
     
 
 
@@ -34,6 +37,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         jPanelModificarHabitaciones.setVisible(false);
         jPanelModificarEmpleado.setVisible(false);
         cargarEmpleadosEnTabla();
+        cargarHabitacionesEnTabla();
         
         lblBienvenido.setText("Bienvenido, " + gerente.getNombre() + " " + gerente.getApellido());
     }
@@ -91,14 +95,71 @@ public class PantallaGerente extends javax.swing.JFrame {
             });
         }
         
-
         tblEmpleados.setModel(modelo);
-        sorter = new TableRowSorter<>(modelo);
-        tblEmpleados.setRowSorter(sorter);
+        sorterEmpleados = new TableRowSorter<>(modelo);
+        tblEmpleados.setRowSorter(sorterEmpleados);
         tblEmpleados.getTableHeader().setReorderingAllowed(false);
         tblEmpleados.getColumnModel().getColumn(0).setPreferredWidth(5); // columna 0 más angosta
         tblEmpleados.getColumnModel().getColumn(1).setPreferredWidth(15); // columna 1 más ancha
         tblEmpleados.getColumnModel().getColumn(4).setPreferredWidth(90); // columna 0 más angosta
+       
+    }
+    
+    private void cargarHabitacionesEnTabla() {
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                // La primera columna será booleana (checkbox)
+                return columnIndex == 0 ? Boolean.class : Object.class;
+            }
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                // Solo la primera columna (checkbox) será editable
+                return column == 0;
+            }
+        };
+
+        JTableHeader header = tblHabitaciones.getTableHeader();
+        header.setFont(new Font("Segoe UI", Font.BOLD, 14)); // Cambia fuente y tamaño
+        header.setForeground(Color.WHITE);                  // Color del texto
+        header.setBackground(new Color(232,130,0));       // Color de fondo (azul)
+
+        tblHabitaciones.getModel().addTableModelListener(e -> {
+            if (e.getColumn() == 0) { // Columna del checkbox
+                for (int i = 0; i < tblHabitaciones.getRowCount(); i++) {
+                    if (i != e.getFirstRow()) {
+                        tblHabitaciones.setValueAt(false, i, 0);
+                    }
+                }
+            }
+        });
+
+        modelo.addColumn("Seleccionar");
+        modelo.addColumn("Numero");
+        modelo.addColumn("Piso");
+        modelo.addColumn("Capacidad de personas");
+        modelo.addColumn("Precio");
+        modelo.addColumn("Descripcion");
+
+        List<Habitacion> habitaciones = new HabitacionService().getAll();
+
+        for (Habitacion h : habitaciones) {
+            modelo.addRow(new Object[]{
+                false, // valor inicial del checkbox
+                h.getNumero(),
+                h.getPiso(),
+                h.getCapacidad_personas(),
+                h.getPrecio_por_noche(),
+                h.getDescripcion()
+            });
+        }
+        
+
+        tblHabitaciones.setModel(modelo);
+        sorterHabitaciones = new TableRowSorter<>(modelo);
+        tblHabitaciones.setRowSorter(sorterHabitaciones);
+        tblHabitaciones.getTableHeader().setReorderingAllowed(false);
        
     }
 
@@ -146,6 +207,9 @@ public class PantallaGerente extends javax.swing.JFrame {
         jSeparator7 = new javax.swing.JSeparator();
         jPanelConsultarIngresos = new javax.swing.JPanel();
         jPanelModificarHabitaciones = new javax.swing.JPanel();
+        ScrollHabitaciones = new javax.swing.JScrollPane();
+        tblHabitaciones = new javax.swing.JTable();
+        jPanel8 = new javax.swing.JPanel();
         jPanelModificarEmpleado = new javax.swing.JPanel();
         ScrollEmpleados = new javax.swing.JScrollPane();
         tblEmpleados = new javax.swing.JTable();
@@ -177,7 +241,6 @@ public class PantallaGerente extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(1109, 682));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -228,6 +291,11 @@ public class PantallaGerente extends javax.swing.JFrame {
         btnModificarHabitaciones.setText("MODIFICAR HABITACIONES");
         btnModificarHabitaciones.setBorder(null);
         btnModificarHabitaciones.setFocusPainted(false);
+        btnModificarHabitaciones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarHabitacionesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -554,12 +622,10 @@ public class PantallaGerente extends javax.swing.JFrame {
                                     .addComponent(lblTelefono)
                                     .addComponent(txtTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
                                     .addComponent(jSeparator7)
-                                    .addGroup(jPanelCargarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(txtDni, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE))
-                                    .addGroup(jPanelCargarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(txtApellido, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE))))
+                                    .addComponent(jSeparator5)
+                                    .addComponent(txtDni, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                                    .addComponent(jSeparator3)
+                                    .addComponent(txtApellido, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)))
                             .addComponent(lblNombre2)
                             .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanelCargarEmpleadoLayout.createSequentialGroup()
@@ -613,7 +679,7 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addGroup(jPanelCargarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 80, Short.MAX_VALUE))
         );
 
         jPanelConsultarIngresos.setBackground(new java.awt.Color(255, 255, 255));
@@ -631,15 +697,48 @@ public class PantallaGerente extends javax.swing.JFrame {
 
         jPanelModificarHabitaciones.setBackground(new java.awt.Color(255, 255, 255));
 
+        tblHabitaciones.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Seleccionar", "Numero", "Piso", "Capacidad de personas", "Precio", "Descripcion"
+            }
+        ));
+        tblHabitaciones.setRowHeight(25);
+        ScrollHabitaciones.setViewportView(tblHabitaciones);
+
+        jPanel8.setBackground(new java.awt.Color(232, 130, 0));
+        jPanel8.setPreferredSize(new java.awt.Dimension(223, 84));
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 84, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanelModificarHabitacionesLayout = new javax.swing.GroupLayout(jPanelModificarHabitaciones);
         jPanelModificarHabitaciones.setLayout(jPanelModificarHabitacionesLayout);
         jPanelModificarHabitacionesLayout.setHorizontalGroup(
             jPanelModificarHabitacionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 788, Short.MAX_VALUE)
+            .addComponent(ScrollHabitaciones, javax.swing.GroupLayout.DEFAULT_SIZE, 793, Short.MAX_VALUE)
+            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 793, Short.MAX_VALUE)
         );
         jPanelModificarHabitacionesLayout.setVerticalGroup(
             jPanelModificarHabitacionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 599, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelModificarHabitacionesLayout.createSequentialGroup()
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(ScrollHabitaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(83, 83, 83))
         );
 
         jPanelModificarEmpleado.setBackground(new java.awt.Color(255, 255, 255));
@@ -1002,7 +1101,7 @@ public class PantallaGerente extends javax.swing.JFrame {
             .addGroup(jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanelConsultarIngresos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanelModificarHabitaciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanelModificarHabitaciones, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanelModificarEmpleado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 605, Short.MAX_VALUE))
         );
@@ -1511,9 +1610,9 @@ public class PantallaGerente extends javax.swing.JFrame {
         String filtro = txtBuscarEmpleado.getText().trim().toLowerCase();
         
         if (filtro.isEmpty() || filtro.equalsIgnoreCase("Buscar empleado por nombre, dni, etc")) {
-            sorter.setRowFilter(null);  // Mostrar todo
+            sorterEmpleados.setRowFilter(null);  // Mostrar todo
         } else {
-            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + Pattern.quote(filtro), 2,3, 4, 5,6,7));
+            sorterEmpleados.setRowFilter(RowFilter.regexFilter("(?i)" + Pattern.quote(filtro), 2,3, 4, 5,6,7));
         }
     }//GEN-LAST:event_btnBuscarEmpleadoActionPerformed
 
@@ -1534,10 +1633,32 @@ public class PantallaGerente extends javax.swing.JFrame {
     private void txtBuscarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarEmpleadoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBuscarEmpleadoActionPerformed
+
+    private void btnModificarHabitacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarHabitacionesActionPerformed
+        Color color = new Color(200,96,39);
+        Color colorOriginal = new Color(252,167,85);
+       
+        btnModificarHabitaciones.setBackground(color);
+        if (btnModificarHabitaciones.getBackground().equals(color)) {
+            btnModificarHabitaciones.setBackground(null); // o poné el color original específico
+            btnModificarEmpleado.setBackground(colorOriginal);
+            btnCargarEmpleado.setBackground(colorOriginal);
+            
+        } else {
+            btnCargarEmpleado.setBackground(Color.RED);
+        }
+
+        txtContrasenia.setEchoChar((char) 0);
+        jPanelCargarEmpleado.setVisible(false);
+        jPanelConsultarIngresos.setVisible(false);
+        jPanelModificarHabitaciones.setVisible(true);
+        jPanelModificarEmpleado.setVisible(false);
+    }//GEN-LAST:event_btnModificarHabitacionesActionPerformed
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane ScrollEmpleados;
+    private javax.swing.JScrollPane ScrollHabitaciones;
     private javax.swing.JButton btnBuscarEmpleado;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCancelarMod;
@@ -1561,6 +1682,7 @@ public class PantallaGerente extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanelCargarEmpleado;
     private javax.swing.JPanel jPanelConsultarIngresos;
     private javax.swing.JPanel jPanelContenido;
@@ -1592,6 +1714,7 @@ public class PantallaGerente extends javax.swing.JFrame {
     private javax.swing.JLabel lblTelefono;
     private javax.swing.JLabel lblTelefonoMod;
     private javax.swing.JTable tblEmpleados;
+    private javax.swing.JTable tblHabitaciones;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtApellidoMod;
     private javax.swing.JTextField txtBuscarEmpleado;
