@@ -22,6 +22,7 @@ public class Habitacion {
 	private int piso;
 	private int capacidad_personas;
         private double precio_por_noche;
+        private String descripcion;
         
         @OneToMany(mappedBy = "habitacion")// Puede servir para ver todas las reservas de una habitacion
         private List<Reserva> reservas;
@@ -65,5 +66,22 @@ public class Habitacion {
         public void setPrecio_por_noche(double precio_por_noche) {
             this.precio_por_noche = precio_por_noche;
         }
+
+        public String getDescripcion() {
+            return descripcion;
+        }
+
+        public void setDescripcion(String descripcion) {
+            this.descripcion = descripcion;
+        }
+
+        public List<Reserva> getReservas() {
+            return reservas;
+        }
+
+        public void setReservas(List<Reserva> reservas) {
+            this.reservas = reservas;
+        }
+  
 }
 

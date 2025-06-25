@@ -14,7 +14,8 @@ import org.hibernate.query.Query;
 
 public class UsuarioService extends AbstractService {
 
-    public Usuario create(String nombre, String apellido, String email, String contrasenia, String dni, String telefono) {
+    //No hacen falta los metodos de crear Usuario porque es abstracto, se crean simplemente empleados en EmpleadoService
+    /*public Usuario create(String nombre, String apellido, String email, String contrasenia, String dni, String telefono) {
         Session session = this.getSession();
         Transaction transaction = null;
         try {
@@ -47,7 +48,7 @@ public class UsuarioService extends AbstractService {
             if (transaction != null) transaction.rollback();
             throw e;
         }
-    }
+    }*/
 
     public Usuario refresh(Usuario user) {
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -68,7 +69,7 @@ public class UsuarioService extends AbstractService {
         return list;
     }
 
-    public void delete(long id) {
+    public void delete(int id) {
         Session session = this.getSession();
         Transaction transaction = null;
         try {
@@ -88,25 +89,6 @@ public class UsuarioService extends AbstractService {
         try {
             transaction = session.beginTransaction();
             session.remove(user);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            throw e;
-        }
-    }
-
-    public void update(Usuario user, String nombre, String apellido, String email, String contrasenia, String dni, String telefono) {
-        Session session = this.getSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            if (nombre != null)   user.setNombre(nombre);
-            if (apellido != null) user.setApellido(apellido);
-            if (email != null)    user.setEmail(email);
-            if (contrasenia != null) user.setContrasenia(contrasenia);
-            if (dni != null) user.setDni(dni);
-            if (telefono != null) user.setTelefono(telefono);
-            session.merge(user);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
@@ -135,9 +117,19 @@ public class UsuarioService extends AbstractService {
         }
     }
     
-    public void modificarDatos(){
-    
+    public void modificarDatos(Usuario user) {
+        Session session = this.getSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            session.merge(user);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw e;
+        }
     }
+    
     
     //Servicio para iniciar sesion
     public Usuario iniciarSesion(String email, String contrasenia) {
@@ -165,5 +157,17 @@ public class UsuarioService extends AbstractService {
             }
             return null; // No se encontró el usuario
         }
+    }
+    
+    public Usuario obtenerPorEmailYClave(String email, String contrasenia) {
+        // lógica para buscar en BD
+        // por ejemplo usando Hibernate:
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Query<Gerente> query = session.createQuery("FROM Gerente WHERE email = :email AND contrasenia = :contrasenia", Gerente.class);
+        query.setParameter("email", email);
+        query.setParameter("contrasenia", contrasenia);
+        Gerente gerente = query.uniqueResult();
+        session.close();
+        return gerente;
     }
 }
