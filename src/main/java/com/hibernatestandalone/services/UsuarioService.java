@@ -14,7 +14,7 @@ import org.hibernate.query.Query;
 
 public class UsuarioService extends AbstractService {
 
-    //No hacen falta los metodos de crear Usuario porque es abstracto, se crean simplemente empleados en EmpleadoService
+    //No hacen falta los metodos de crear Usuario porque es abstracto, se crean simplemente empleados en GerenteService
     /*public Usuario create(String nombre, String apellido, String email, String contrasenia, String dni, String telefono) {
         Session session = this.getSession();
         Transaction transaction = null;
@@ -69,7 +69,7 @@ public class UsuarioService extends AbstractService {
         return list;
     }
 
-    public void delete(int id) {
+    public void delete(Long id) {
         Session session = this.getSession();
         Transaction transaction = null;
         try {
@@ -117,18 +117,7 @@ public class UsuarioService extends AbstractService {
         }
     }
     
-    public void modificarDatos(Usuario user) {
-        Session session = this.getSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            session.merge(user);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            throw e;
-        }
-    }
+    
     
     
     //Servicio para iniciar sesion

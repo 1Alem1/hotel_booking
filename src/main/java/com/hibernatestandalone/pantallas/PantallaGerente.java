@@ -9,9 +9,12 @@ import com.hibernatestandalone.services.UsuarioService;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableRowSorter;
 
 
 public class PantallaGerente extends javax.swing.JFrame {
@@ -19,6 +22,8 @@ public class PantallaGerente extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(PantallaGerente.class.getName());
     private Long idEmpleadoActual; 
     private final UsuarioService usuarioService = new UsuarioService();
+    private final GerenteService gerenteService = new GerenteService();
+    private TableRowSorter<DefaultTableModel> sorter;
     
 
 
@@ -33,67 +38,69 @@ public class PantallaGerente extends javax.swing.JFrame {
         lblBienvenido.setText("Bienvenido, " + gerente.getNombre() + " " + gerente.getApellido());
     }
     
-    
-        private void cargarEmpleadosEnTabla() {
-            DefaultTableModel modelo = new DefaultTableModel() {
-                @Override
-                public Class<?> getColumnClass(int columnIndex) {
-                    // La primera columna será booleana (checkbox)
-                    return columnIndex == 0 ? Boolean.class : Object.class;
-                }
-
-                @Override
-                public boolean isCellEditable(int row, int column) {
-                    // Solo la primera columna (checkbox) será editable
-                    return column == 0;
-                }
-            };
-            
-            JTableHeader header = tblEmpleados.getTableHeader();
-            header.setFont(new Font("Segoe UI", Font.BOLD, 14)); // Cambia fuente y tamaño
-            header.setForeground(Color.WHITE);                  // Color del texto
-            header.setBackground(new Color(232,130,0));       // Color de fondo (azul)
-
-            tblEmpleados.getModel().addTableModelListener(e -> {
-                if (e.getColumn() == 0) { // Columna del checkbox
-                    for (int i = 0; i < tblEmpleados.getRowCount(); i++) {
-                        if (i != e.getFirstRow()) {
-                            tblEmpleados.setValueAt(false, i, 0);
-                        }
-                    }
-                }
-            });
-
-          
-            modelo.addColumn("Seleccionar");
-            modelo.addColumn("ID Empleado");
-            modelo.addColumn("Nombre");
-            modelo.addColumn("Apellido");
-            modelo.addColumn("Email");
-            modelo.addColumn("DNI");
-            modelo.addColumn("Teléfono");
-
-            List<Empleado> empleados = new EmpleadoService().getAll();
-
-            for (Empleado e : empleados) {
-                modelo.addRow(new Object[]{
-                    false, // valor inicial del checkbox
-                    e.getId_usuario(),
-                    e.getNombre(),
-                    e.getApellido(),
-                    e.getEmail(),
-                    e.getDni(),
-                    e.getTelefono()
-                });
+ 
+    private void cargarEmpleadosEnTabla() {
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                // La primera columna será booleana (checkbox)
+                return columnIndex == 0 ? Boolean.class : Object.class;
             }
 
-            tblEmpleados.setModel(modelo);
-            tblEmpleados.getTableHeader().setReorderingAllowed(false);
-            tblEmpleados.getColumnModel().getColumn(0).setPreferredWidth(5); // columna 0 más angosta
-            tblEmpleados.getColumnModel().getColumn(1).setPreferredWidth(15); // columna 1 más ancha
-            tblEmpleados.getColumnModel().getColumn(4).setPreferredWidth(90); // columna 0 más angosta
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                // Solo la primera columna (checkbox) será editable
+                return column == 0;
+            }
+        };
 
+        JTableHeader header = tblEmpleados.getTableHeader();
+        header.setFont(new Font("Segoe UI", Font.BOLD, 14)); // Cambia fuente y tamaño
+        header.setForeground(Color.WHITE);                  // Color del texto
+        header.setBackground(new Color(232,130,0));       // Color de fondo (azul)
+
+        tblEmpleados.getModel().addTableModelListener(e -> {
+            if (e.getColumn() == 0) { // Columna del checkbox
+                for (int i = 0; i < tblEmpleados.getRowCount(); i++) {
+                    if (i != e.getFirstRow()) {
+                        tblEmpleados.setValueAt(false, i, 0);
+                    }
+                }
+            }
+        });
+
+        modelo.addColumn("Seleccionar");
+        modelo.addColumn("ID Empleado");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Apellido");
+        modelo.addColumn("Email");
+        modelo.addColumn("DNI");
+        modelo.addColumn("Teléfono");
+
+        List<Empleado> empleados = new EmpleadoService().getAll();
+
+        for (Empleado e : empleados) {
+            modelo.addRow(new Object[]{
+                false, // valor inicial del checkbox
+                e.getId_usuario(),
+                e.getNombre(),
+                e.getApellido(),
+                e.getEmail(),
+                e.getDni(),
+                e.getTelefono()
+            });
         }
+        
+
+        tblEmpleados.setModel(modelo);
+        sorter = new TableRowSorter<>(modelo);
+        tblEmpleados.setRowSorter(sorter);
+        tblEmpleados.getTableHeader().setReorderingAllowed(false);
+        tblEmpleados.getColumnModel().getColumn(0).setPreferredWidth(5); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(1).setPreferredWidth(15); // columna 1 más ancha
+        tblEmpleados.getColumnModel().getColumn(4).setPreferredWidth(90); // columna 0 más angosta
+       
+    }
 
     
     @SuppressWarnings("unchecked")
@@ -146,6 +153,8 @@ public class PantallaGerente extends javax.swing.JFrame {
         btnEliminar = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
+        txtBuscarEmpleado = new javax.swing.JTextField();
+        btnBuscarEmpleado = new javax.swing.JButton();
         jSubPanelModificarEmpleado = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         lblApellidoMod = new javax.swing.JLabel();
@@ -677,6 +686,11 @@ public class PantallaGerente extends javax.swing.JFrame {
         btnEliminar.setText("ELIMINAR");
         btnEliminar.setBorder(null);
         btnEliminar.setFocusPainted(false);
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         jPanel6.setBackground(new java.awt.Color(232, 130, 0));
         jPanel6.setPreferredSize(new java.awt.Dimension(223, 84));
@@ -686,6 +700,35 @@ public class PantallaGerente extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("MODIFICAR EMPLEADOS");
 
+        txtBuscarEmpleado.setBackground(new java.awt.Color(255, 255, 255));
+        txtBuscarEmpleado.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtBuscarEmpleado.setText("Buscar empleado por nombre, dni, etc");
+        txtBuscarEmpleado.setBorder(null);
+        txtBuscarEmpleado.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtBuscarEmpleadoFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtBuscarEmpleadoFocusLost(evt);
+            }
+        });
+        txtBuscarEmpleado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscarEmpleadoActionPerformed(evt);
+            }
+        });
+
+        btnBuscarEmpleado.setBackground(new java.awt.Color(56, 121, 185));
+        btnBuscarEmpleado.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnBuscarEmpleado.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscarEmpleado.setText("BUSCAR");
+        btnBuscarEmpleado.setFocusPainted(false);
+        btnBuscarEmpleado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarEmpleadoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -693,14 +736,21 @@ public class PantallaGerente extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel3)
-                .addGap(0, 0, 0))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 181, Short.MAX_VALUE)
+                .addComponent(txtBuscarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnBuscarEmpleado)
+                .addGap(22, 22, 22))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addComponent(jLabel3)
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtBuscarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         jSubPanelModificarEmpleado.setBackground(new java.awt.Color(255, 255, 255));
@@ -858,7 +908,7 @@ public class PantallaGerente extends javax.swing.JFrame {
                             .addComponent(lblDniMod, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtDniMod, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jSeparator12, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(120, Short.MAX_VALUE))
+                .addContainerGap(153, Short.MAX_VALUE))
         );
         jSubPanelModificarEmpleadoLayout.setVerticalGroup(
             jSubPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -898,7 +948,7 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addGroup(jSubPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnConfirmarMod, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelarMod, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanelModificarEmpleadoLayout = new javax.swing.GroupLayout(jPanelModificarEmpleado);
@@ -911,8 +961,8 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(110, 110, 110)
                 .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(162, Short.MAX_VALUE))
-            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 760, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 793, Short.MAX_VALUE)
             .addGroup(jPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jSubPanelModificarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -927,7 +977,7 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addGroup(jPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(74, Short.MAX_VALUE))
+                .addContainerGap(79, Short.MAX_VALUE))
             .addGroup(jPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jSubPanelModificarEmpleado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1147,8 +1197,8 @@ public class PantallaGerente extends javax.swing.JFrame {
         int respuesta = JOptionPane.showConfirmDialog(this, "¿Desea cargar el nuevo empleado?", "Confirmar acción", JOptionPane.YES_NO_OPTION);
         if (respuesta == JOptionPane.YES_OPTION) {
             try {
-                EmpleadoService service = new EmpleadoService(); // Asegurate de tener esta clase
-                Empleado empleado = service.create(nombre, apellido, email, contrasenia, dni, telefono);
+                 // Asegurate de tener esta clase
+                Empleado empleado = gerenteService.cargarEmpleado(nombre, apellido, email, contrasenia, dni, telefono);
                 cargarEmpleadosEnTabla();
                 JOptionPane.showMessageDialog(this, "Empleado cargado exitosamente");
 
@@ -1237,6 +1287,8 @@ public class PantallaGerente extends javax.swing.JFrame {
         btnEliminar.setVisible(true);
         tblEmpleados.setVisible(true);
         ScrollEmpleados.setVisible(true);
+        txtBuscarEmpleado.setVisible(true);
+        btnBuscarEmpleado.setVisible(true);
         
         jSubPanelModificarEmpleado.setVisible(false);
         jPanelCargarEmpleado.setVisible(false);
@@ -1299,6 +1351,8 @@ public class PantallaGerente extends javax.swing.JFrame {
             txtTelefonoMod.setText(empleado.getTelefono());
 
             // Ocultar panel original
+            txtBuscarEmpleado.setVisible(false);
+            btnBuscarEmpleado.setVisible(false);
             btnModificar.setVisible(false);
             btnEliminar.setVisible(false);
             ScrollEmpleados.setVisible(false);
@@ -1363,16 +1417,37 @@ public class PantallaGerente extends javax.swing.JFrame {
         empleado.setEmail(email);
         empleado.setDni(dni);
         empleado.setTelefono(telefono);
-
-        usuarioService.modificarDatos(empleado);
-
-        JOptionPane.showMessageDialog(this, "Datos actualizados correctamente.");
         
+        // Validación de campos vacíos
+        if (
+            nombre.isEmpty() || 
+            apellido.isEmpty() || 
+            email.isEmpty() || 
+            dni.isEmpty() || 
+            telefono.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Todos los campos deben estar completos", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+       int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea modificar este empleado?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+       if (confirmacion == JOptionPane.YES_OPTION) {
+            try {
+                gerenteService.modificarEmpleado(empleado);
+                cargarEmpleadosEnTabla();
+                JOptionPane.showMessageDialog(this, "Datos actualizados correctamente.");
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+            }catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al modificar el empleado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+       
+        btnBuscarEmpleado.setVisible(true);
+        txtBuscarEmpleado.setVisible(true);
         jSubPanelModificarEmpleado.setVisible(false);
         btnModificar.setVisible(true);
         btnEliminar.setVisible(true);
         ScrollEmpleados.setVisible(true);
-        cargarEmpleadosEnTabla();
 
     }//GEN-LAST:event_btnConfirmarModActionPerformed
 
@@ -1383,6 +1458,8 @@ public class PantallaGerente extends javax.swing.JFrame {
         btnEliminar.setVisible(true);
         tblEmpleados.setVisible(true);
         ScrollEmpleados.setVisible(true);
+        txtBuscarEmpleado.setVisible(true);
+        btnBuscarEmpleado.setVisible(true);
         
         tblEmpleados.clearSelection();
         idEmpleadoActual = null;
@@ -1393,10 +1470,75 @@ public class PantallaGerente extends javax.swing.JFrame {
         jPanelModificarHabitaciones.setVisible(false);
         jPanelModificarEmpleado.setVisible(true);
     }//GEN-LAST:event_btnCancelarModActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        int filaSeleccionada = -1;
+        Long idSeleccionado = null;
+
+        // Recorremos la tabla para ver si hay algún checkbox en true
+        for (int i = 0; i < tblEmpleados.getRowCount(); i++) {
+            Boolean seleccionado = (Boolean) tblEmpleados.getValueAt(i, 0); // columna del checkbox
+            if (seleccionado != null && seleccionado) {
+                filaSeleccionada = i;
+                Object idValue = tblEmpleados.getValueAt(i, 1); // columna del ID
+                if (idValue instanceof Integer integer) {
+                    idSeleccionado = integer.longValue();
+                } else if (idValue instanceof Long aLong) {
+                    idSeleccionado = aLong;
+                }
+                break;
+            }
+        }
+
+        if (idSeleccionado == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione un empleado primero.");
+            return;
+        }
+
+        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea eliminar este empleado?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            try {
+                gerenteService.removerEmpleado(idSeleccionado);
+                cargarEmpleadosEnTabla(); // Refrescar tabla
+                JOptionPane.showMessageDialog(this, "Empleado eliminado correctamente.");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al eliminar el empleado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnBuscarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarEmpleadoActionPerformed
+        String filtro = txtBuscarEmpleado.getText().trim().toLowerCase();
+        
+        if (filtro.isEmpty() || filtro.equalsIgnoreCase("Buscar empleado por nombre, dni, etc")) {
+            sorter.setRowFilter(null);  // Mostrar todo
+        } else {
+            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + Pattern.quote(filtro), 2,3, 4, 5,6,7));
+        }
+    }//GEN-LAST:event_btnBuscarEmpleadoActionPerformed
+
+    private void txtBuscarEmpleadoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBuscarEmpleadoFocusGained
+        if (txtBuscarEmpleado.getText().equals("Buscar empleado por nombre, dni, etc")) {
+            txtBuscarEmpleado.setText("");
+            txtBuscarEmpleado.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_txtBuscarEmpleadoFocusGained
+
+    private void txtBuscarEmpleadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBuscarEmpleadoFocusLost
+        if (txtBuscarEmpleado.getText().isEmpty()) {
+            txtBuscarEmpleado.setForeground(new java.awt.Color(150, 150, 150));
+            txtBuscarEmpleado.setText("Buscar empleado por nombre, dni, etc");
+        }
+    }//GEN-LAST:event_txtBuscarEmpleadoFocusLost
+
+    private void txtBuscarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarEmpleadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBuscarEmpleadoActionPerformed
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane ScrollEmpleados;
+    private javax.swing.JButton btnBuscarEmpleado;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCancelarMod;
     private javax.swing.JButton btnCargarEmpleado;
@@ -1452,6 +1594,7 @@ public class PantallaGerente extends javax.swing.JFrame {
     private javax.swing.JTable tblEmpleados;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtApellidoMod;
+    private javax.swing.JTextField txtBuscarEmpleado;
     private javax.swing.JPasswordField txtContrasenia;
     private javax.swing.JTextField txtDni;
     private javax.swing.JTextField txtDniMod;
