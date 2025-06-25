@@ -1,4 +1,3 @@
-
 package com.hibernatestandalone.entity;
 
 import jakarta.persistence.Entity;

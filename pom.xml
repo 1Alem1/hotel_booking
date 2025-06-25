@@ -52,10 +52,14 @@
 	      <artifactId>junit-jupiter-params</artifactId>
 	      <scope>test</scope>
 	    </dependency>
+            
 	    <dependency>
 	        <groupId>unknown.binary</groupId>
-	        <artifactId>AbsoluteLayout</artifactId>
-	        <version>SNAPSHOT</version>
+                <artifactId>AbsoluteLayout</artifactId>
+                <version>SNAPSHOT</version>
+                <scope>system</scope>
+                <systemPath>C:/Users/yagom/OneDrive/Escritorio/Facultad/hotel_booking/lib/AbsoluteLayout-SNAPSHOT.jar</systemPath>
+
 	    </dependency>
 	</dependencies>
 
