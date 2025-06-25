@@ -22,11 +22,14 @@ import javax.swing.table.TableRowSorter;
 public class PantallaGerente extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(PantallaGerente.class.getName());
-    private Long idEmpleadoActual; 
+    private Long idEmpleadoActual;
+    private Long idHabitacionActual;
     private final UsuarioService usuarioService = new UsuarioService();
     private final GerenteService gerenteService = new GerenteService();
+    private final HabitacionService habitacionService = new HabitacionService();
     private TableRowSorter<DefaultTableModel> sorterEmpleados;
     private TableRowSorter<DefaultTableModel> sorterHabitaciones;
+    
     
 
 
@@ -63,17 +66,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         header.setForeground(Color.WHITE);                  // Color del texto
         header.setBackground(new Color(232,130,0));       // Color de fondo (azul)
 
-        tblEmpleados.getModel().addTableModelListener(e -> {
-            if (e.getColumn() == 0) { // Columna del checkbox
-                for (int i = 0; i < tblEmpleados.getRowCount(); i++) {
-                    if (i != e.getFirstRow()) {
-                        tblEmpleados.setValueAt(false, i, 0);
-                    }
-                }
-            }
-        });
-
-        modelo.addColumn("Seleccionar");
+        modelo.addColumn("");
         modelo.addColumn("ID Empleado");
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
@@ -95,13 +88,52 @@ public class PantallaGerente extends javax.swing.JFrame {
             });
         }
         
+        tblEmpleados.getModel().addTableModelListener(e -> {
+            if (e.getColumn() == 0) { // Columna del checkbox
+                for (int i = 0; i < tblEmpleados.getRowCount(); i++) {
+                    if (i != e.getFirstRow()) {
+                        tblEmpleados.setValueAt(false, i, 0);
+                    }
+                }
+            }
+        });
+        
         tblEmpleados.setModel(modelo);
+        
+        tblEmpleados.getColumnModel().getColumn(0).setPreferredWidth(40); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(0).setMinWidth(40); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(0).setMaxWidth(40); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(0).setResizable(false); // columna 0 más angosta
+        
+        tblEmpleados.getColumnModel().getColumn(1).setPreferredWidth(100); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(1).setMinWidth(100); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(1).setMaxWidth(100); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(1).setResizable(false); // columna 0 más angosta
+        
+        tblEmpleados.getColumnModel().getColumn(2).setPreferredWidth(100); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(2).setMinWidth(100); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(2).setMaxWidth(100); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(2).setResizable(false); // columna 0 más angosta
+        
+        tblEmpleados.getColumnModel().getColumn(3).setPreferredWidth(100); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(3).setMinWidth(100); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(3).setMaxWidth(100); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(3).setResizable(false); // columna 0 más angosta
+        
+        tblEmpleados.getColumnModel().getColumn(4).setPreferredWidth(300); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(4).setMinWidth(300); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(4).setMaxWidth(300); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(4).setResizable(false); // columna 0 más angosta
+        
+        tblEmpleados.getColumnModel().getColumn(5).setPreferredWidth(140); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(5).setMinWidth(140); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(5).setMaxWidth(140); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(5).setResizable(false); // columna 0 más angosta
+        
         sorterEmpleados = new TableRowSorter<>(modelo);
         tblEmpleados.setRowSorter(sorterEmpleados);
         tblEmpleados.getTableHeader().setReorderingAllowed(false);
-        tblEmpleados.getColumnModel().getColumn(0).setPreferredWidth(5); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(1).setPreferredWidth(15); // columna 1 más ancha
-        tblEmpleados.getColumnModel().getColumn(4).setPreferredWidth(90); // columna 0 más angosta
+        
        
     }
     
@@ -125,22 +157,13 @@ public class PantallaGerente extends javax.swing.JFrame {
         header.setForeground(Color.WHITE);                  // Color del texto
         header.setBackground(new Color(232,130,0));       // Color de fondo (azul)
 
-        tblHabitaciones.getModel().addTableModelListener(e -> {
-            if (e.getColumn() == 0) { // Columna del checkbox
-                for (int i = 0; i < tblHabitaciones.getRowCount(); i++) {
-                    if (i != e.getFirstRow()) {
-                        tblHabitaciones.setValueAt(false, i, 0);
-                    }
-                }
-            }
-        });
-
-        modelo.addColumn("Seleccionar");
+        modelo.addColumn("");
         modelo.addColumn("Numero");
         modelo.addColumn("Piso");
         modelo.addColumn("Capacidad de personas");
         modelo.addColumn("Precio");
         modelo.addColumn("Descripcion");
+        modelo.addColumn("ID");
 
         List<Habitacion> habitaciones = new HabitacionService().getAll();
 
@@ -151,17 +174,64 @@ public class PantallaGerente extends javax.swing.JFrame {
                 h.getPiso(),
                 h.getCapacidad_personas(),
                 h.getPrecio_por_noche(),
-                h.getDescripcion()
+                h.getDescripcion(),
+                h.getId()
             });
         }
         
-
+        tblHabitaciones.getModel().addTableModelListener(e -> {
+            if (e.getColumn() == 0) { // Columna del checkbox
+                for (int i = 0; i < tblHabitaciones.getRowCount(); i++) {
+                    if (i != e.getFirstRow()) {
+                        tblHabitaciones.setValueAt(false, i, 0);
+                    }
+                }
+            }
+        });
+        
+        tblHabitaciones.setRowSorter(null); // Remover sorter temporalmente
         tblHabitaciones.setModel(modelo);
+        
+        tblHabitaciones.getColumnModel().getColumn(0).setPreferredWidth(40); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(0).setMinWidth(40); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(0).setMaxWidth(40); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(0).setResizable(false); // columna 0 más angosta
+        
+        tblHabitaciones.getColumnModel().getColumn(1).setPreferredWidth(80);; // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(1).setMinWidth(80);; // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(1).setMaxWidth(80); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(1).setResizable(false); // columna 0 más angosta
+        
+        tblHabitaciones.getColumnModel().getColumn(2).setPreferredWidth(80); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(2).setMinWidth(80); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(2).setMaxWidth(80); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(2).setResizable(false); // columna 0 más angosta
+        
+        tblHabitaciones.getColumnModel().getColumn(3).setPreferredWidth(200); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(3).setMinWidth(200); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(3).setMaxWidth(200); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(3).setResizable(false); // columna 0 más angosta
+        
+        tblHabitaciones.getColumnModel().getColumn(4).setPreferredWidth(90); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(4).setMinWidth(90); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(4).setMaxWidth(90); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(4).setResizable(false); // columna 0 más angosta
+        
+        tblHabitaciones.getColumnModel().getColumn(6).setMinWidth(0);
+        tblHabitaciones.getColumnModel().getColumn(6).setMaxWidth(0);
+        tblHabitaciones.getColumnModel().getColumn(6).setWidth(0);
+        tblHabitaciones.getColumnModel().getColumn(6).setPreferredWidth(0);
+        tblHabitaciones.getColumnModel().getColumn(6).setResizable(false);
+        
         sorterHabitaciones = new TableRowSorter<>(modelo);
         tblHabitaciones.setRowSorter(sorterHabitaciones);
         tblHabitaciones.getTableHeader().setReorderingAllowed(false);
-       
-    }
+        
+        
+      
+        tblHabitaciones.revalidate();
+        tblHabitaciones.repaint();
+  }
 
     
     @SuppressWarnings("unchecked")
@@ -210,6 +280,10 @@ public class PantallaGerente extends javax.swing.JFrame {
         ScrollHabitaciones = new javax.swing.JScrollPane();
         tblHabitaciones = new javax.swing.JTable();
         jPanel8 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        txtBuscarHabitacion = new javax.swing.JTextField();
+        btnBuscarHabitacion = new javax.swing.JButton();
+        btnModificarHabitacion1 = new javax.swing.JButton();
         jPanelModificarEmpleado = new javax.swing.JPanel();
         ScrollEmpleados = new javax.swing.JScrollPane();
         tblEmpleados = new javax.swing.JTable();
@@ -254,7 +328,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         jSeparator1.setForeground(new java.awt.Color(255, 255, 255));
 
         btnCargarEmpleado.setBackground(new java.awt.Color(252, 167, 85));
-        btnCargarEmpleado.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnCargarEmpleado.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnCargarEmpleado.setForeground(new java.awt.Color(255, 255, 255));
         btnCargarEmpleado.setText("CARGAR NUEVO EMPLEADO");
         btnCargarEmpleado.setBorder(null);
@@ -267,7 +341,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         });
 
         btnModificarEmpleado.setBackground(new java.awt.Color(252, 167, 85));
-        btnModificarEmpleado.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnModificarEmpleado.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnModificarEmpleado.setForeground(new java.awt.Color(255, 255, 255));
         btnModificarEmpleado.setText("MODIFICAR EMPLEADO");
         btnModificarEmpleado.setBorder(null);
@@ -279,14 +353,19 @@ public class PantallaGerente extends javax.swing.JFrame {
         });
 
         btnConsultarIngresos.setBackground(new java.awt.Color(252, 167, 85));
-        btnConsultarIngresos.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnConsultarIngresos.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnConsultarIngresos.setForeground(new java.awt.Color(255, 255, 255));
         btnConsultarIngresos.setText("CONSULTAR INGRESOS POR FECHA");
         btnConsultarIngresos.setBorder(null);
         btnConsultarIngresos.setFocusPainted(false);
+        btnConsultarIngresos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConsultarIngresosActionPerformed(evt);
+            }
+        });
 
         btnModificarHabitaciones.setBackground(new java.awt.Color(252, 167, 85));
-        btnModificarHabitaciones.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnModificarHabitaciones.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnModificarHabitaciones.setForeground(new java.awt.Color(255, 255, 255));
         btnModificarHabitaciones.setText("MODIFICAR HABITACIONES");
         btnModificarHabitaciones.setBorder(null);
@@ -330,7 +409,7 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addComponent(btnConsultarIngresos, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(btnModificarHabitaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(186, Short.MAX_VALUE))
+                .addContainerGap(371, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(204, 102, 0));
@@ -439,11 +518,11 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addContainerGap(28, Short.MAX_VALUE))
         );
 
-        lblEmail.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblEmail.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblEmail.setText("EMAIL");
 
         txtNombre.setBackground(new java.awt.Color(255, 255, 255));
-        txtNombre.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtNombre.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtNombre.setForeground(new java.awt.Color(150, 150, 150));
         txtNombre.setText("Ingrese el nombre");
         txtNombre.setBorder(null);
@@ -461,11 +540,11 @@ public class PantallaGerente extends javax.swing.JFrame {
             }
         });
 
-        lblApellido.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblApellido.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblApellido.setText("APELLIDO");
 
         txtApellido.setBackground(new java.awt.Color(255, 255, 255));
-        txtApellido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtApellido.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtApellido.setForeground(new java.awt.Color(150, 150, 150));
         txtApellido.setText("Ingrese el apellido");
         txtApellido.setBorder(null);
@@ -483,20 +562,20 @@ public class PantallaGerente extends javax.swing.JFrame {
             }
         });
 
-        lblDni.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblDni.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblDni.setText("DNI");
 
-        lblNombre2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblNombre2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblNombre2.setText("NOMBRE");
 
-        lblContrasenia.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblContrasenia.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblContrasenia.setText("CONTRASEÑA");
 
-        lblTelefono.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTelefono.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblTelefono.setText("TELÉFONO");
 
         txtDni.setBackground(new java.awt.Color(255, 255, 255));
-        txtDni.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtDni.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtDni.setForeground(new java.awt.Color(150, 150, 150));
         txtDni.setText("Ingrese el DNI");
         txtDni.setBorder(null);
@@ -515,7 +594,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         });
 
         txtEmail.setBackground(new java.awt.Color(255, 255, 255));
-        txtEmail.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtEmail.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtEmail.setForeground(new java.awt.Color(150, 150, 150));
         txtEmail.setText("Ingrese el correo electrónico");
         txtEmail.setBorder(null);
@@ -534,7 +613,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         });
 
         txtTelefono.setBackground(new java.awt.Color(255, 255, 255));
-        txtTelefono.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtTelefono.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtTelefono.setForeground(new java.awt.Color(150, 150, 150));
         txtTelefono.setText("Ingrese el número de teléfono");
         txtTelefono.setBorder(null);
@@ -553,7 +632,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         });
 
         txtContrasenia.setBackground(new java.awt.Color(255, 255, 255));
-        txtContrasenia.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtContrasenia.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtContrasenia.setForeground(new java.awt.Color(150, 150, 150));
         txtContrasenia.setText("Ingrese la contraseña");
         txtContrasenia.setBorder(null);
@@ -604,11 +683,10 @@ public class PantallaGerente extends javax.swing.JFrame {
             .addGroup(jPanelCargarEmpleadoLayout.createSequentialGroup()
                 .addGroup(jPanelCargarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelCargarEmpleadoLayout.createSequentialGroup()
-                        .addGap(75, 75, 75)
+                        .addGap(283, 283, 283)
                         .addGroup(jPanelCargarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanelCargarEmpleadoLayout.createSequentialGroup()
                                 .addGroup(jPanelCargarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblContrasenia)
@@ -620,26 +698,27 @@ public class PantallaGerente extends javax.swing.JFrame {
                                     .addComponent(lblDni, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblApellido)
                                     .addComponent(lblTelefono)
-                                    .addComponent(txtTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                                    .addComponent(txtTelefono)
                                     .addComponent(jSeparator7)
                                     .addComponent(jSeparator5)
-                                    .addComponent(txtDni, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                                    .addComponent(txtDni)
                                     .addComponent(jSeparator3)
-                                    .addComponent(txtApellido, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)))
+                                    .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(lblNombre2)
-                            .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanelCargarEmpleadoLayout.createSequentialGroup()
-                        .addGap(163, 163, 163)
-                        .addComponent(btnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(82, 82, 82)
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(162, Short.MAX_VALUE))
+                        .addGap(301, 301, 301)
+                        .addComponent(btnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(106, 106, 106)
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(386, Short.MAX_VALUE))
         );
         jPanelCargarEmpleadoLayout.setVerticalGroup(
             jPanelCargarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelCargarEmpleadoLayout.createSequentialGroup()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(65, 65, 65)
                 .addGroup(jPanelCargarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNombre2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -675,11 +754,11 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addGroup(jPanelCargarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(43, 43, 43)
+                .addGap(111, 111, 111)
                 .addGroup(jPanelCargarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 80, Short.MAX_VALUE))
+                    .addComponent(btnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         jPanelConsultarIngresos.setBackground(new java.awt.Color(255, 255, 255));
@@ -692,11 +771,15 @@ public class PantallaGerente extends javax.swing.JFrame {
         );
         jPanelConsultarIngresosLayout.setVerticalGroup(
             jPanelConsultarIngresosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 599, Short.MAX_VALUE)
+            .addGap(0, 790, Short.MAX_VALUE)
         );
 
         jPanelModificarHabitaciones.setBackground(new java.awt.Color(255, 255, 255));
 
+        ScrollHabitaciones.setBackground(new java.awt.Color(255, 255, 255));
+        ScrollHabitaciones.setBorder(null);
+
+        tblHabitaciones.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         tblHabitaciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -708,41 +791,109 @@ public class PantallaGerente extends javax.swing.JFrame {
                 "Seleccionar", "Numero", "Piso", "Capacidad de personas", "Precio", "Descripcion"
             }
         ));
+        tblHabitaciones.setGridColor(new java.awt.Color(0, 0, 0));
         tblHabitaciones.setRowHeight(25);
+        tblHabitaciones.setSelectionBackground(new java.awt.Color(255, 255, 255));
+        tblHabitaciones.setSelectionForeground(new java.awt.Color(0, 0, 0));
         ScrollHabitaciones.setViewportView(tblHabitaciones);
 
         jPanel8.setBackground(new java.awt.Color(232, 130, 0));
         jPanel8.setPreferredSize(new java.awt.Dimension(223, 84));
 
+        jLabel4.setBackground(new java.awt.Color(232, 130, 0));
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("MODIFICAR HABITACIONES");
+
+        txtBuscarHabitacion.setBackground(new java.awt.Color(255, 255, 255));
+        txtBuscarHabitacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtBuscarHabitacion.setText("Buscar habitacion por numero, piso, etc");
+        txtBuscarHabitacion.setBorder(null);
+        txtBuscarHabitacion.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtBuscarHabitacionFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtBuscarHabitacionFocusLost(evt);
+            }
+        });
+        txtBuscarHabitacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscarHabitacionActionPerformed(evt);
+            }
+        });
+
+        btnBuscarHabitacion.setBackground(new java.awt.Color(56, 121, 185));
+        btnBuscarHabitacion.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnBuscarHabitacion.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscarHabitacion.setText("BUSCAR");
+        btnBuscarHabitacion.setFocusPainted(false);
+        btnBuscarHabitacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarHabitacionActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtBuscarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnBuscarHabitacion)
+                .addGap(10, 10, 10))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 84, Short.MAX_VALUE)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBuscarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
+
+        btnModificarHabitacion1.setBackground(new java.awt.Color(0, 153, 51));
+        btnModificarHabitacion1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnModificarHabitacion1.setForeground(new java.awt.Color(255, 255, 255));
+        btnModificarHabitacion1.setText("MODIFICAR");
+        btnModificarHabitacion1.setBorder(null);
+        btnModificarHabitacion1.setFocusPainted(false);
+        btnModificarHabitacion1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarHabitacion1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelModificarHabitacionesLayout = new javax.swing.GroupLayout(jPanelModificarHabitaciones);
         jPanelModificarHabitaciones.setLayout(jPanelModificarHabitacionesLayout);
         jPanelModificarHabitacionesLayout.setHorizontalGroup(
             jPanelModificarHabitacionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(ScrollHabitaciones, javax.swing.GroupLayout.DEFAULT_SIZE, 793, Short.MAX_VALUE)
-            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 793, Short.MAX_VALUE)
+            .addComponent(ScrollHabitaciones, javax.swing.GroupLayout.DEFAULT_SIZE, 1271, Short.MAX_VALUE)
+            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 1271, Short.MAX_VALUE)
+            .addGroup(jPanelModificarHabitacionesLayout.createSequentialGroup()
+                .addGap(445, 445, 445)
+                .addComponent(btnModificarHabitacion1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelModificarHabitacionesLayout.setVerticalGroup(
             jPanelModificarHabitacionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelModificarHabitacionesLayout.createSequentialGroup()
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(ScrollHabitaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(83, 83, 83))
+                .addComponent(ScrollHabitaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnModificarHabitacion1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12))
         );
 
         jPanelModificarEmpleado.setBackground(new java.awt.Color(255, 255, 255));
-        jPanelModificarEmpleado.setPreferredSize(new java.awt.Dimension(760, 600));
+        jPanelModificarEmpleado.setPreferredSize(new java.awt.Dimension(1271, 790));
 
         ScrollEmpleados.setBackground(new java.awt.Color(255, 255, 255));
         ScrollEmpleados.setBorder(null);
@@ -835,7 +986,7 @@ public class PantallaGerente extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 181, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 659, Short.MAX_VALUE)
                 .addComponent(txtBuscarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnBuscarEmpleado)
@@ -869,19 +1020,19 @@ public class PantallaGerente extends javax.swing.JFrame {
             .addGap(0, 84, Short.MAX_VALUE)
         );
 
-        lblApellidoMod.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblApellidoMod.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblApellidoMod.setText("APELLIDO");
 
-        lblNombreMod1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblNombreMod1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblNombreMod1.setText("NOMBRE");
 
-        lblDniMod.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblDniMod.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblDniMod.setText("DNI");
 
-        lblTelefonoMod.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTelefonoMod.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblTelefonoMod.setText("TELÉFONO");
 
-        lblEmailMod.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblEmailMod.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblEmailMod.setText("EMAIL");
 
         txtEmailMod.setBackground(new java.awt.Color(255, 255, 255));
@@ -979,41 +1130,41 @@ public class PantallaGerente extends javax.swing.JFrame {
             jSubPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jSubPanelModificarEmpleadoLayout.createSequentialGroup()
-                .addGap(123, 123, 123)
                 .addGroup(jSubPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jSubPanelModificarEmpleadoLayout.createSequentialGroup()
+                        .addGap(273, 273, 273)
+                        .addComponent(btnConfirmarMod, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(145, 145, 145)
+                        .addComponent(btnCancelarMod, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jSubPanelModificarEmpleadoLayout.createSequentialGroup()
+                        .addGap(290, 290, 290)
                         .addGroup(jSubPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtTelefonoMod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jSubPanelModificarEmpleadoLayout.createSequentialGroup()
-                                .addGap(56, 56, 56)
-                                .addComponent(btnConfirmarMod, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(51, 51, 51)
-                        .addComponent(btnCancelarMod, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblNombreMod1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jSubPanelModificarEmpleadoLayout.createSequentialGroup()
-                        .addGroup(jSubPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblEmailMod, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblTelefonoMod, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtEmailMod, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNombreMod, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(36, 36, 36)
-                        .addGroup(jSubPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator11, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtApellidoMod, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblApellidoMod, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblDniMod, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtDniMod, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jSeparator12, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(153, Short.MAX_VALUE))
+                                .addGroup(jSubPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblEmailMod, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtEmailMod, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNombreMod, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jSeparator10, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblTelefonoMod, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(36, 36, 36)
+                                .addGroup(jSubPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jSeparator11, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtApellidoMod, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblApellidoMod, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblDniMod, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtDniMod, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jSeparator12, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNombreMod1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(453, Short.MAX_VALUE))
         );
         jSubPanelModificarEmpleadoLayout.setVerticalGroup(
             jSubPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jSubPanelModificarEmpleadoLayout.createSequentialGroup()
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(60, 60, 60)
+                .addGap(70, 70, 70)
                 .addGroup(jSubPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNombreMod1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblApellidoMod, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1043,11 +1194,11 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addComponent(txtTelefonoMod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator12, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                 .addGroup(jSubPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnConfirmarMod, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancelarMod, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(56, Short.MAX_VALUE))
+                    .addComponent(btnCancelarMod, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnConfirmarMod, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(175, 175, 175))
         );
 
         javax.swing.GroupLayout jPanelModificarEmpleadoLayout = new javax.swing.GroupLayout(jPanelModificarEmpleado);
@@ -1056,12 +1207,12 @@ public class PantallaGerente extends javax.swing.JFrame {
             jPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(ScrollEmpleados)
             .addGroup(jPanelModificarEmpleadoLayout.createSequentialGroup()
-                .addGap(192, 192, 192)
-                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(110, 110, 110)
-                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(305, 305, 305)
+                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(157, 157, 157)
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 793, Short.MAX_VALUE)
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 1271, Short.MAX_VALUE)
             .addGroup(jPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jSubPanelModificarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1071,12 +1222,12 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(ScrollEmpleados, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
+                .addComponent(ScrollEmpleados, javax.swing.GroupLayout.PREFERRED_SIZE, 584, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(79, Short.MAX_VALUE))
+                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(40, Short.MAX_VALUE))
             .addGroup(jPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jSubPanelModificarEmpleado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1093,7 +1244,7 @@ public class PantallaGerente extends javax.swing.JFrame {
             .addGroup(jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanelModificarHabitaciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanelModificarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, 793, Short.MAX_VALUE))
+                .addComponent(jPanelModificarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelContenidoLayout.setVerticalGroup(
             jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1103,7 +1254,7 @@ public class PantallaGerente extends javax.swing.JFrame {
             .addGroup(jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanelModificarHabitaciones, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanelModificarEmpleado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 605, Short.MAX_VALUE))
+                .addComponent(jPanelModificarEmpleado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -1141,13 +1292,15 @@ public class PantallaGerente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCargarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarEmpleadoActionPerformed
-        Color color = new Color(200,96,39);
+        Color color = new Color(204,102,0);
         Color colorOriginal = new Color(252,167,85);
        
         btnCargarEmpleado.setBackground(color);
         if (btnCargarEmpleado.getBackground().equals(color)) {
-            btnCargarEmpleado.setBackground(null); // o poné el color original específico
+            
             btnModificarEmpleado.setBackground(colorOriginal);
+            btnModificarHabitaciones.setBackground(colorOriginal);
+            btnConsultarIngresos.setBackground(colorOriginal);
             
         } else {
             btnCargarEmpleado.setBackground(Color.RED);
@@ -1369,13 +1522,15 @@ public class PantallaGerente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnModificarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarEmpleadoActionPerformed
-        Color color = new Color(200,96,39);
+        Color color = new Color(204,102,0);
         Color colorOriginal = new Color(252,167,85);
         
         btnModificarEmpleado.setBackground(color);
         if (btnModificarEmpleado.getBackground().equals(color)) {
-            btnModificarEmpleado.setBackground(null); // o poné el color original específico
+      
             btnCargarEmpleado.setBackground(colorOriginal);
+            btnModificarHabitaciones.setBackground(colorOriginal);
+            btnConsultarIngresos.setBackground(colorOriginal);
         } else {
             btnModificarEmpleado.setBackground(Color.RED);
         }
@@ -1635,13 +1790,14 @@ public class PantallaGerente extends javax.swing.JFrame {
     }//GEN-LAST:event_txtBuscarEmpleadoActionPerformed
 
     private void btnModificarHabitacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarHabitacionesActionPerformed
-        Color color = new Color(200,96,39);
+        Color color = new Color(204,102,0);
         Color colorOriginal = new Color(252,167,85);
        
         btnModificarHabitaciones.setBackground(color);
         if (btnModificarHabitaciones.getBackground().equals(color)) {
-            btnModificarHabitaciones.setBackground(null); // o poné el color original específico
+ 
             btnModificarEmpleado.setBackground(colorOriginal);
+            btnConsultarIngresos.setBackground(colorOriginal);
             btnCargarEmpleado.setBackground(colorOriginal);
             
         } else {
@@ -1653,13 +1809,111 @@ public class PantallaGerente extends javax.swing.JFrame {
         jPanelConsultarIngresos.setVisible(false);
         jPanelModificarHabitaciones.setVisible(true);
         jPanelModificarEmpleado.setVisible(false);
+        
     }//GEN-LAST:event_btnModificarHabitacionesActionPerformed
+
+    private void txtBuscarHabitacionFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBuscarHabitacionFocusGained
+        if (txtBuscarHabitacion.getText().equals("Buscar habitacion por numero, piso, etc")) {
+            txtBuscarHabitacion.setText("");
+            txtBuscarHabitacion.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_txtBuscarHabitacionFocusGained
+
+    private void txtBuscarHabitacionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBuscarHabitacionFocusLost
+        if (txtBuscarHabitacion.getText().isEmpty()) {
+            txtBuscarHabitacion.setForeground(new java.awt.Color(150, 150, 150));
+            txtBuscarHabitacion.setText("Buscar habitacion por numero, piso, etc");
+        }
+    }//GEN-LAST:event_txtBuscarHabitacionFocusLost
+
+    private void txtBuscarHabitacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarHabitacionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBuscarHabitacionActionPerformed
+
+    private void btnBuscarHabitacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarHabitacionActionPerformed
+        String filtro = txtBuscarHabitacion.getText().trim().toLowerCase();
+        
+        if (filtro.isEmpty() || filtro.equalsIgnoreCase("Buscar habitacion por numero, piso, etc")) {
+            sorterHabitaciones.setRowFilter(null);  // Mostrar todo
+        } else {
+            sorterHabitaciones.setRowFilter(RowFilter.regexFilter("(?i)" + Pattern.quote(filtro),1,2,3,4,5));
+        }
+    }//GEN-LAST:event_btnBuscarHabitacionActionPerformed
+
+    private void btnConsultarIngresosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarIngresosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnConsultarIngresosActionPerformed
+
+    private void btnModificarHabitacion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarHabitacion1ActionPerformed
+        int filaSeleccionada = -1;
+        Long idSeleccionado = null;
+
+        // Recorrer la tabla de habitaciones y buscar cuál tiene el checkbox seleccionado
+        for (int i = 0; i < tblHabitaciones.getRowCount(); i++) {
+            Boolean seleccionado = (Boolean) tblHabitaciones.getValueAt(i, 0); // columna checkbox
+            if (seleccionado != null && seleccionado) {
+                filaSeleccionada = i;
+                Object idValue = tblHabitaciones.getValueAt(i, 6); // columna del ID (ajustá el índice según donde tengas el id)
+                if (idValue instanceof Integer integer) {
+                    idSeleccionado = integer.longValue();
+                } else if (idValue instanceof Long aLong) {
+                    idSeleccionado = aLong;
+                } else if (idValue instanceof String s) {
+                    try {
+                        idSeleccionado = Long.parseLong(s);
+                    } catch (NumberFormatException e) {
+                        idSeleccionado = null;
+                    }
+                }
+                break;
+            }
+        }
+
+        if (idSeleccionado == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione una habitación primero.");
+            return;
+        }
+
+        // Usar el id para buscar la habitación en la DB
+        // Pedir confirmación 
+        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea modificar esta habitación?", "Confirmar modificación", JOptionPane.YES_NO_OPTION);
+        if (confirmacion == JOptionPane.YES_OPTION) {
+        try {
+        
+            // Cargar habitación de la base
+            Habitacion habitacion = habitacionService.findById(idSeleccionado);
+           
+
+            // Pedir nuevo precio (o cualquier otro dato que quieras modificar)
+            String nuevoPrecioStr = JOptionPane.showInputDialog(this, 
+                "Ingrese el nuevo precio para la habitación número " + habitacion.getNumero() + ":");
+            if (nuevoPrecioStr == null || nuevoPrecioStr.trim().isEmpty()) {
+                return; // Canceló
+            }
+            
+            double nuevoPrecio = Double.parseDouble(nuevoPrecioStr);
+            habitacion.setPrecio_por_noche(nuevoPrecio);
+            // Actualizar en BD
+            habitacionService.actualizar(habitacion);
+
+            // Refrescar tabla
+            cargarHabitacionesEnTabla();
+
+            JOptionPane.showMessageDialog(this, "Habitación modificada correctamente.");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Precio inválido. Debe ser un número.", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al modificar la habitación: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnModificarHabitacion1ActionPerformed
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane ScrollEmpleados;
     private javax.swing.JScrollPane ScrollHabitaciones;
     private javax.swing.JButton btnBuscarEmpleado;
+    private javax.swing.JButton btnBuscarHabitacion;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCancelarMod;
     private javax.swing.JButton btnCargarEmpleado;
@@ -1670,11 +1924,13 @@ public class PantallaGerente extends javax.swing.JFrame {
     private javax.swing.JButton btnMiPerfil;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnModificarEmpleado;
+    private javax.swing.JButton btnModificarHabitacion1;
     private javax.swing.JButton btnModificarHabitaciones;
     private javax.swing.JButton btnSalir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -1718,6 +1974,7 @@ public class PantallaGerente extends javax.swing.JFrame {
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtApellidoMod;
     private javax.swing.JTextField txtBuscarEmpleado;
+    private javax.swing.JTextField txtBuscarHabitacion;
     private javax.swing.JPasswordField txtContrasenia;
     private javax.swing.JTextField txtDni;
     private javax.swing.JTextField txtDniMod;

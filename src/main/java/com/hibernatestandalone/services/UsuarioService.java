@@ -62,11 +62,12 @@ public class UsuarioService extends AbstractService {
     }
 
     public List<Usuario> getAll() {
-        Session session = this.getSession();
-        Transaction transaction = session.beginTransaction();
-        String hql = "FROM Usuario";
-        List<Usuario> list = session.createQuery(hql, Usuario.class).getResultList();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        List<Usuario> list = session
+            .createQuery("FROM Usuario", Usuario.class)
+            .getResultList();
         return list;
+        }
     }
 
     public void delete(Long id) {
@@ -117,9 +118,7 @@ public class UsuarioService extends AbstractService {
         }
     }
     
-    
-    
-    
+
     //Servicio para iniciar sesion
     public Usuario iniciarSesion(String email, String contrasenia) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
