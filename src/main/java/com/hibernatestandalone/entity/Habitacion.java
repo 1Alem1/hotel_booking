@@ -82,6 +82,6 @@ public class Habitacion {
         public void setReservas(List<Reserva> reservas) {
             this.reservas = reservas;
         }
-  
 }
+
 

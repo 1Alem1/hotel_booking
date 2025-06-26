@@ -1,6 +1,10 @@
 package com.hibernatestandalone.pantallas;
 
+import com.hibernatestandalone.entity.Habitacion;
+import com.hibernatestandalone.services.HabitacionService;
+
 import java.awt.Color;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 
@@ -12,6 +16,26 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     public PantallaEmpleado() {
         initComponents();
     }
+    
+    private void cargarHabitacionesDisponibles() {
+    HabitacionService habitacionService = new HabitacionService();
+    List<Habitacion> habitaciones = habitacionService.getAll();
+
+    javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblHabitacionDisponible.getModel();
+    model.setRowCount(0); // Limpiar tabla
+
+    for (Habitacion h : habitaciones) {
+        Object[] fila = {
+            false,
+            h.getNumero(),
+            h.getPiso(),
+            h.getCapacidad_personas(),
+            h.getPrecio_por_noche(),
+            h.getDescripcion()
+        };
+        model.addRow(fila);
+    }
+}
 
    
     @SuppressWarnings("unchecked")
@@ -83,9 +107,8 @@ public class PantallaEmpleado extends javax.swing.JFrame {
                 .addGap(105, 105, 105)
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(btnListaReservas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnReservar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(btnListaReservas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnReservar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanelMenuLayout.setVerticalGroup(
             jPanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -120,7 +143,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         jPanelDecoracionLayout.setHorizontalGroup(
             jPanelDecoracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDecoracionLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(1110, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27))
         );
@@ -142,7 +165,22 @@ public class PantallaEmpleado extends javax.swing.JFrame {
             new String [] {
                 "Selecionar", "Numero", "Piso", "Capacidad de Personas", "Precio", "Descripcion"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Boolean.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(tblHabitacionDisponible);
 
         jPanel2.setBackground(new java.awt.Color(232, 130, 0));
@@ -180,9 +218,9 @@ public class PantallaEmpleado extends javax.swing.JFrame {
             jPanelReservarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelReservarLayout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 798, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(368, Short.MAX_VALUE))
         );
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -206,7 +244,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         );
         jPanelListarReservasLayout.setVerticalGroup(
             jPanelListarReservasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 862, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 895, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanelContenidoLayout = new javax.swing.GroupLayout(jPanelContenido);
@@ -240,9 +278,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
                 .addComponent(jPanelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(jPanelContenido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanelContenido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanelDecoracion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
@@ -293,6 +329,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         }
         jPanelReservar.setVisible(true);
         jPanelListarReservas.setVisible(false);
+        cargarHabitacionesDisponibles();
     }//GEN-LAST:event_btnReservarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
