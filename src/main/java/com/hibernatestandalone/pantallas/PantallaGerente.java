@@ -525,7 +525,6 @@ public class PantallaGerente extends javax.swing.JFrame {
         lblEmail.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblEmail.setText("EMAIL");
 
-        txtNombre.setBackground(new java.awt.Color(255, 255, 255));
         txtNombre.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtNombre.setForeground(new java.awt.Color(150, 150, 150));
         txtNombre.setText("Ingrese el nombre");
@@ -547,7 +546,6 @@ public class PantallaGerente extends javax.swing.JFrame {
         lblApellido.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblApellido.setText("APELLIDO");
 
-        txtApellido.setBackground(new java.awt.Color(255, 255, 255));
         txtApellido.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtApellido.setForeground(new java.awt.Color(150, 150, 150));
         txtApellido.setText("Ingrese el apellido");
@@ -578,7 +576,6 @@ public class PantallaGerente extends javax.swing.JFrame {
         lblTelefono.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblTelefono.setText("TELÉFONO");
 
-        txtDni.setBackground(new java.awt.Color(255, 255, 255));
         txtDni.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtDni.setForeground(new java.awt.Color(150, 150, 150));
         txtDni.setText("Ingrese el DNI");
@@ -597,7 +594,6 @@ public class PantallaGerente extends javax.swing.JFrame {
             }
         });
 
-        txtEmail.setBackground(new java.awt.Color(255, 255, 255));
         txtEmail.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtEmail.setForeground(new java.awt.Color(150, 150, 150));
         txtEmail.setText("Ingrese el correo electrónico");
@@ -616,7 +612,6 @@ public class PantallaGerente extends javax.swing.JFrame {
             }
         });
 
-        txtTelefono.setBackground(new java.awt.Color(255, 255, 255));
         txtTelefono.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtTelefono.setForeground(new java.awt.Color(150, 150, 150));
         txtTelefono.setText("Ingrese el número de teléfono");
@@ -635,7 +630,6 @@ public class PantallaGerente extends javax.swing.JFrame {
             }
         });
 
-        txtContrasenia.setBackground(new java.awt.Color(255, 255, 255));
         txtContrasenia.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtContrasenia.setForeground(new java.awt.Color(150, 150, 150));
         txtContrasenia.setText("Ingrese la contraseña");
@@ -798,7 +792,6 @@ public class PantallaGerente extends javax.swing.JFrame {
         tblHabitaciones.setGridColor(new java.awt.Color(0, 0, 0));
         tblHabitaciones.setRowHeight(35);
         tblHabitaciones.setSelectionBackground(new java.awt.Color(255, 255, 255));
-        tblHabitaciones.setSelectionForeground(new java.awt.Color(0, 0, 0));
         ScrollHabitaciones.setViewportView(tblHabitaciones);
 
         jPanel8.setBackground(new java.awt.Color(232, 130, 0));
@@ -809,7 +802,6 @@ public class PantallaGerente extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("MODIFICAR HABITACIONES");
 
-        txtBuscarHabitacion.setBackground(new java.awt.Color(255, 255, 255));
         txtBuscarHabitacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtBuscarHabitacion.setText("Buscar habitacion por numero, piso, etc");
         txtBuscarHabitacion.setBorder(null);
@@ -902,9 +894,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         ScrollEmpleados.setBackground(new java.awt.Color(255, 255, 255));
         ScrollEmpleados.setBorder(null);
 
-        tblEmpleados.setBackground(new java.awt.Color(255, 255, 255));
         tblEmpleados.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        tblEmpleados.setForeground(new java.awt.Color(0, 0, 0));
         tblEmpleados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
@@ -919,7 +909,6 @@ public class PantallaGerente extends javax.swing.JFrame {
         tblEmpleados.setGridColor(new java.awt.Color(0, 0, 0));
         tblEmpleados.setRowHeight(35);
         tblEmpleados.setSelectionBackground(new java.awt.Color(255, 255, 255));
-        tblEmpleados.setSelectionForeground(new java.awt.Color(0, 0, 0));
         ScrollEmpleados.setViewportView(tblEmpleados);
 
         btnModificar.setBackground(new java.awt.Color(0, 153, 51));
@@ -954,7 +943,6 @@ public class PantallaGerente extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("MODIFICAR EMPLEADOS");
 
-        txtBuscarEmpleado.setBackground(new java.awt.Color(255, 255, 255));
         txtBuscarEmpleado.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtBuscarEmpleado.setText("Buscar empleado por nombre, dni, etc");
         txtBuscarEmpleado.setBorder(null);
@@ -1021,7 +1009,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 84, Short.MAX_VALUE)
+            .addGap(0, 79, Short.MAX_VALUE)
         );
 
         lblApellidoMod.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -1039,7 +1027,6 @@ public class PantallaGerente extends javax.swing.JFrame {
         lblEmailMod.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblEmailMod.setText("EMAIL");
 
-        txtEmailMod.setBackground(new java.awt.Color(255, 255, 255));
         txtEmailMod.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtEmailMod.setText("Ingrese el email");
         txtEmailMod.setBorder(null);
@@ -1052,7 +1039,6 @@ public class PantallaGerente extends javax.swing.JFrame {
             }
         });
 
-        txtNombreMod.setBackground(new java.awt.Color(255, 255, 255));
         txtNombreMod.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtNombreMod.setText("Ingrese el nombre");
         txtNombreMod.setBorder(null);
@@ -1065,7 +1051,6 @@ public class PantallaGerente extends javax.swing.JFrame {
             }
         });
 
-        txtApellidoMod.setBackground(new java.awt.Color(255, 255, 255));
         txtApellidoMod.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtApellidoMod.setText("Ingrese el apellido");
         txtApellidoMod.setBorder(null);
@@ -1078,7 +1063,6 @@ public class PantallaGerente extends javax.swing.JFrame {
             }
         });
 
-        txtDniMod.setBackground(new java.awt.Color(255, 255, 255));
         txtDniMod.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtDniMod.setText("Ingrese el DNI");
         txtDniMod.setBorder(null);
@@ -1091,7 +1075,6 @@ public class PantallaGerente extends javax.swing.JFrame {
             }
         });
 
-        txtTelefonoMod.setBackground(new java.awt.Color(255, 255, 255));
         txtTelefonoMod.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtTelefonoMod.setText("Ingrese el número de teléfono");
         txtTelefonoMod.setBorder(null);
@@ -1168,7 +1151,7 @@ public class PantallaGerente extends javax.swing.JFrame {
             jSubPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jSubPanelModificarEmpleadoLayout.createSequentialGroup()
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(70, 70, 70)
+                .addGap(75, 75, 75)
                 .addGroup(jSubPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNombreMod1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblApellidoMod, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
