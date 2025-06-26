@@ -198,7 +198,7 @@ private void cargarHabitacionesEnTabla() {
         btnReservar = new javax.swing.JButton();
         btnListaReservas = new javax.swing.JButton();
         jPanelDecoracion = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        jSalir = new javax.swing.JButton();
         jPanelContenido = new javax.swing.JPanel();
         jPanelReservar = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -294,15 +294,15 @@ private void cargarHabitacionesEnTabla() {
 
         jPanelDecoracion.setBackground(new java.awt.Color(204, 102, 0));
 
-        jButton1.setBackground(new java.awt.Color(204, 0, 0));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("SALIR");
-        jButton1.setBorder(null);
-        jButton1.setFocusPainted(false);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jSalir.setBackground(new java.awt.Color(204, 0, 0));
+        jSalir.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jSalir.setForeground(new java.awt.Color(255, 255, 255));
+        jSalir.setText("SALIR");
+        jSalir.setBorder(null);
+        jSalir.setFocusPainted(false);
+        jSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jSalirActionPerformed(evt);
             }
         });
 
@@ -312,14 +312,14 @@ private void cargarHabitacionesEnTabla() {
             jPanelDecoracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDecoracionLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27))
         );
         jPanelDecoracionLayout.setVerticalGroup(
             jPanelDecoracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelDecoracionLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
@@ -579,7 +579,7 @@ private void cargarHabitacionesEnTabla() {
         jPanelListarReservas.setVisible(false);
     }//GEN-LAST:event_btnReservarActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSalirActionPerformed
          int respuesta = JOptionPane.showConfirmDialog(this, "¿Desea cerrar sesión?", "Cerrar sesión", JOptionPane.YES_NO_OPTION);
         if (respuesta == JOptionPane.YES_OPTION) {
             // Cierra la ventana actual
@@ -590,7 +590,7 @@ private void cargarHabitacionesEnTabla() {
             login.setVisible(true);
             login.setLocationRelativeTo(null); // Centrar
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jSalirActionPerformed
 
     private void btnReservarHabitacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarHabitacionActionPerformed
         // TODO add your handling code here:
@@ -637,7 +637,6 @@ private void cargarHabitacionesEnTabla() {
     private javax.swing.JButton btnReservar;
     private javax.swing.JButton btnReservarHabitacion;
     private javax.swing.JLabel check_out;
-    private javax.swing.JButton jButton1;
     private com.toedter.calendar.JDateChooser jFechaInicio;
     private com.toedter.calendar.JDateChooser jFechafinal;
     private javax.swing.JFrame jFrame1;
@@ -652,6 +651,7 @@ private void cargarHabitacionesEnTabla() {
     private javax.swing.JPanel jPanelListarReservas;
     private javax.swing.JPanel jPanelMenu;
     private javax.swing.JPanel jPanelReservar;
+    private javax.swing.JButton jSalir;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator2;
