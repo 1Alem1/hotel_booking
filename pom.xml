@@ -52,6 +52,11 @@
 	      <artifactId>junit-jupiter-params</artifactId>
 	      <scope>test</scope>
 	    </dependency>
+            <dependency>
+                <groupId>com.toedter</groupId>
+                <artifactId>jcalendar</artifactId>
+                <version>1.4</version>
+            </dependency>
 	</dependencies>
 
   <build>

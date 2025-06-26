@@ -7,9 +7,12 @@ import com.hibernatestandalone.entity.Usuario;
 import com.hibernatestandalone.services.EmpleadoService;
 import com.hibernatestandalone.services.GerenteService;
 import com.hibernatestandalone.services.HabitacionService;
+import com.hibernatestandalone.services.ReservaService;
 import com.hibernatestandalone.services.UsuarioService;
+import com.hibernatestandalone.util.HibernateUtil;
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
@@ -17,6 +20,8 @@ import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 public class PantallaEmpleado extends javax.swing.JFrame {
     
@@ -185,6 +190,7 @@ private void cargarHabitacionesEnTabla() {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jFrame1 = new javax.swing.JFrame();
         jPanel1 = new javax.swing.JPanel();
         jPanelMenu = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -200,13 +206,27 @@ private void cargarHabitacionesEnTabla() {
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         btnBuscarHabitacion = new javax.swing.JButton();
-        txtBuscarHabitacion = new javax.swing.JTextField();
+        jFechaInicio = new com.toedter.calendar.JDateChooser();
+        jFechafinal = new com.toedter.calendar.JDateChooser();
+        check_out = new javax.swing.JLabel();
+        Check_in = new javax.swing.JLabel();
         btnReservarHabitacion = new javax.swing.JButton();
         jPanelListarReservas = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblHabitacionOcupada = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
+
+        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
+        jFrame1.getContentPane().setLayout(jFrame1Layout);
+        jFrame1Layout.setHorizontalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jFrame1Layout.setVerticalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -312,7 +332,7 @@ private void cargarHabitacionesEnTabla() {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "Seleccionar", "Numero", "Piso", "Capacidad de Personas", "Precio", "Descripcion"
+                "Seleccionar", "Numero", "Piso", "Capacidad", "Precio", "Descripcion"
             }
         ));
         tblHabitacionDisponible.setGridColor(new java.awt.Color(0, 0, 0));
@@ -331,27 +351,22 @@ private void cargarHabitacionesEnTabla() {
         btnBuscarHabitacion.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnBuscarHabitacion.setForeground(new java.awt.Color(255, 255, 255));
         btnBuscarHabitacion.setText("BUSCAR");
+        btnBuscarHabitacion.setBorder(null);
         btnBuscarHabitacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarHabitacionActionPerformed(evt);
             }
         });
 
-        txtBuscarHabitacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtBuscarHabitacion.setText("Buscar habitacion por numero, piso, etc");
-        txtBuscarHabitacion.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txtBuscarHabitacionFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtBuscarHabitacionFocusLost(evt);
-            }
-        });
-        txtBuscarHabitacion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBuscarHabitacionActionPerformed(evt);
-            }
-        });
+        jFechaInicio.setBackground(new java.awt.Color(56, 121, 185));
+
+        jFechafinal.setBackground(new java.awt.Color(56, 121, 185));
+
+        check_out.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        check_out.setText("CHECK-OUT");
+
+        Check_in.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        Check_in.setText("CHECK-IN");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -361,19 +376,33 @@ private void cargarHabitacionesEnTabla() {
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(txtBuscarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
+                .addComponent(Check_in)
+                .addGap(18, 18, 18)
+                .addComponent(jFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
+                .addComponent(check_out)
+                .addGap(18, 18, 18)
+                .addComponent(jFechafinal, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(98, 98, 98)
                 .addComponent(btnBuscarHabitacion)
                 .addGap(14, 14, 14))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(btnBuscarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtBuscarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(btnBuscarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Check_in))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(check_out, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jFechafinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(9, 9, 9)))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
@@ -391,22 +420,22 @@ private void cargarHabitacionesEnTabla() {
         jPanelReservar.setLayout(jPanelReservarLayout);
         jPanelReservarLayout.setHorizontalGroup(
             jPanelReservarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1265, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1322, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanelReservarLayout.createSequentialGroup()
-                .addGap(440, 440, 440)
+                .addGap(456, 456, 456)
                 .addComponent(btnReservarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(666, Short.MAX_VALUE))
         );
         jPanelReservarLayout.setVerticalGroup(
             jPanelReservarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelReservarLayout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 751, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 617, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(btnReservarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(133, Short.MAX_VALUE))
         );
 
         tblHabitacionOcupada.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -454,7 +483,7 @@ private void cargarHabitacionesEnTabla() {
         jPanelListarReservas.setLayout(jPanelListarReservasLayout);
         jPanelListarReservasLayout.setHorizontalGroup(
             jPanelListarReservasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1265, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1322, Short.MAX_VALUE)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanelListarReservasLayout.setVerticalGroup(
@@ -563,46 +592,55 @@ private void cargarHabitacionesEnTabla() {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void txtBuscarHabitacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarHabitacionActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtBuscarHabitacionActionPerformed
-
-    private void btnBuscarHabitacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarHabitacionActionPerformed
-        String filtro = txtBuscarHabitacion.getText().trim().toLowerCase();
-        
-        if (filtro.isEmpty() || filtro.equalsIgnoreCase("Buscar habitacion por numero, piso, etc")) {
-            sorterHabitaciones.setRowFilter(null);  // Mostrar todo
-        } else {
-            sorterHabitaciones.setRowFilter(RowFilter.regexFilter("(?i)" + Pattern.quote(filtro),1,2,3,4,5));
-        }
-    }//GEN-LAST:event_btnBuscarHabitacionActionPerformed
-
-    private void txtBuscarHabitacionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBuscarHabitacionFocusLost
-    if (txtBuscarHabitacion.getText().isEmpty()) {
-            txtBuscarHabitacion.setForeground(new java.awt.Color(150, 150, 150));
-            txtBuscarHabitacion.setText("Buscar habitacion por numero, piso, etc");
-        }   
-    }//GEN-LAST:event_txtBuscarHabitacionFocusLost
-
-    private void txtBuscarHabitacionFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBuscarHabitacionFocusGained
-    if (txtBuscarHabitacion.getText().equals("Buscar habitacion por numero, piso, etc")) {
-            txtBuscarHabitacion.setText("");
-            txtBuscarHabitacion.setForeground(Color.BLACK);
-    }
-    }//GEN-LAST:event_txtBuscarHabitacionFocusGained
-
     private void btnReservarHabitacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarHabitacionActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnReservarHabitacionActionPerformed
 
+    private void btnBuscarHabitacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarHabitacionActionPerformed
+         Date checkIn = jFechaInicio.getDate();
+    Date checkOut = jFechafinal.getDate();
+
+    if (checkIn == null || checkOut == null || !checkOut.after(checkIn)) {
+        JOptionPane.showMessageDialog(this, "Seleccioná un rango de fechas válido.");
+        return;
+    }
+
+    ReservaService reservaService = new ReservaService();
+    List<Habitacion> disponibles = reservaService.buscarHabitacionesDisponibles(checkIn, checkOut);
+
+    DefaultTableModel modelo = (DefaultTableModel) tblHabitacionDisponible.getModel();
+    modelo.setRowCount(0); // Limpiar tabla antes de cargar
+
+    for (Habitacion h : disponibles) {
+        modelo.addRow(new Object[]{
+            false, // para la columna "Seleccionar"
+            h.getNumero(),
+            h.getPiso(),
+            h.getCapacidad(),
+            h.getPrecio(),
+            h.getDescripcion()
+        });
+    }
+
+    if (disponibles.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "No hay habitaciones disponibles para ese rango.");
+    }
+
+    }//GEN-LAST:event_btnBuscarHabitacionActionPerformed
+
   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Check_in;
     private javax.swing.JButton btnBuscarHabitacion;
     private javax.swing.JButton btnListaReservas;
     private javax.swing.JButton btnReservar;
     private javax.swing.JButton btnReservarHabitacion;
+    private javax.swing.JLabel check_out;
     private javax.swing.JButton jButton1;
+    private com.toedter.calendar.JDateChooser jFechaInicio;
+    private com.toedter.calendar.JDateChooser jFechafinal;
+    private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -619,6 +657,5 @@ private void cargarHabitacionesEnTabla() {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTable tblHabitacionDisponible;
     private javax.swing.JTable tblHabitacionOcupada;
-    private javax.swing.JTextField txtBuscarHabitacion;
     // End of variables declaration//GEN-END:variables
 }
