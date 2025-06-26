@@ -14,42 +14,6 @@ import org.hibernate.query.Query;
 
 public class UsuarioService extends AbstractService {
 
-    //No hacen falta los metodos de crear Usuario porque es abstracto, se crean simplemente empleados en GerenteService
-    /*public Usuario create(String nombre, String apellido, String email, String contrasenia, String dni, String telefono) {
-        Session session = this.getSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            Usuario user = new Usuario() {};
-            user.setNombre(nombre);
-            user.setApellido(apellido);
-            user.setEmail(email);
-            user.setContrasenia(contrasenia);
-            user.setDni(dni);
-            user.setTelefono(telefono);
-            session.persist(user);
-            transaction.commit();
-            return user;
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            throw e;
-        }
-    }
-
-    public Usuario create(Usuario user) {
-        Session session = this.getSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            session.persist(user);
-            transaction.commit();
-            return user;
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            throw e;
-        }
-    }*/
-
     public Usuario refresh(Usuario user) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.refresh(user);

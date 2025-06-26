@@ -62,12 +62,12 @@ public class PantallaGerente extends javax.swing.JFrame {
         };
 
         JTableHeader header = tblEmpleados.getTableHeader();
-        header.setFont(new Font("Segoe UI", Font.BOLD, 14)); // Cambia fuente y tamaño
-        header.setForeground(Color.WHITE);                  // Color del texto
-        header.setBackground(new Color(232,130,0));       // Color de fondo (azul)
+        header.setFont(new Font("Segoe UI", Font.BOLD, 22)); 
+        header.setForeground(Color.WHITE);                  
+        header.setBackground(new Color(232,130,0));       
 
         modelo.addColumn("");
-        modelo.addColumn("ID Empleado");
+        modelo.addColumn("ID");
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
         modelo.addColumn("Email");
@@ -100,35 +100,35 @@ public class PantallaGerente extends javax.swing.JFrame {
         
         tblEmpleados.setModel(modelo);
         
-        tblEmpleados.getColumnModel().getColumn(0).setPreferredWidth(40); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(0).setMinWidth(40); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(0).setMaxWidth(40); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(0).setResizable(false); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(0).setPreferredWidth(40); 
+        tblEmpleados.getColumnModel().getColumn(0).setMinWidth(40); 
+        tblEmpleados.getColumnModel().getColumn(0).setMaxWidth(40); 
+        tblEmpleados.getColumnModel().getColumn(0).setResizable(false); 
         
-        tblEmpleados.getColumnModel().getColumn(1).setPreferredWidth(100); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(1).setMinWidth(100); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(1).setMaxWidth(100); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(1).setResizable(false); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(1).setPreferredWidth(100); 
+        tblEmpleados.getColumnModel().getColumn(1).setMinWidth(100); 
+        tblEmpleados.getColumnModel().getColumn(1).setMaxWidth(100); 
+        tblEmpleados.getColumnModel().getColumn(1).setResizable(false); 
         
-        tblEmpleados.getColumnModel().getColumn(2).setPreferredWidth(100); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(2).setMinWidth(100); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(2).setMaxWidth(100); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(2).setResizable(false); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(2).setPreferredWidth(150); 
+        tblEmpleados.getColumnModel().getColumn(2).setMinWidth(150); 
+        tblEmpleados.getColumnModel().getColumn(2).setMaxWidth(150); 
+        tblEmpleados.getColumnModel().getColumn(2).setResizable(false); 
         
-        tblEmpleados.getColumnModel().getColumn(3).setPreferredWidth(100); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(3).setMinWidth(100); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(3).setMaxWidth(100); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(3).setResizable(false); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(3).setPreferredWidth(150); 
+        tblEmpleados.getColumnModel().getColumn(3).setMinWidth(150); 
+        tblEmpleados.getColumnModel().getColumn(3).setMaxWidth(150); 
+        tblEmpleados.getColumnModel().getColumn(3).setResizable(false); 
         
-        tblEmpleados.getColumnModel().getColumn(4).setPreferredWidth(300); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(4).setMinWidth(300); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(4).setMaxWidth(300); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(4).setResizable(false); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(4).setPreferredWidth(350); 
+        tblEmpleados.getColumnModel().getColumn(4).setMinWidth(350); 
+        tblEmpleados.getColumnModel().getColumn(4).setMaxWidth(350); 
+        tblEmpleados.getColumnModel().getColumn(4).setResizable(false); 
         
-        tblEmpleados.getColumnModel().getColumn(5).setPreferredWidth(140); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(5).setMinWidth(140); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(5).setMaxWidth(140); // columna 0 más angosta
-        tblEmpleados.getColumnModel().getColumn(5).setResizable(false); // columna 0 más angosta
+        tblEmpleados.getColumnModel().getColumn(5).setPreferredWidth(140); 
+        tblEmpleados.getColumnModel().getColumn(5).setMinWidth(140); 
+        tblEmpleados.getColumnModel().getColumn(5).setMaxWidth(140); 
+        tblEmpleados.getColumnModel().getColumn(5).setResizable(false); 
         
         sorterEmpleados = new TableRowSorter<>(modelo);
         tblEmpleados.setRowSorter(sorterEmpleados);
@@ -153,7 +153,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         };
 
         JTableHeader header = tblHabitaciones.getTableHeader();
-        header.setFont(new Font("Segoe UI", Font.BOLD, 14)); // Cambia fuente y tamaño
+        header.setFont(new Font("Segoe UI", Font.BOLD, 22)); // Cambia fuente y tamaño
         header.setForeground(Color.WHITE);                  // Color del texto
         header.setBackground(new Color(232,130,0));       // Color de fondo (azul)
 
@@ -192,30 +192,30 @@ public class PantallaGerente extends javax.swing.JFrame {
         tblHabitaciones.setRowSorter(null); // Remover sorter temporalmente
         tblHabitaciones.setModel(modelo);
         
-        tblHabitaciones.getColumnModel().getColumn(0).setPreferredWidth(40); // columna 0 más angosta
-        tblHabitaciones.getColumnModel().getColumn(0).setMinWidth(40); // columna 0 más angosta
-        tblHabitaciones.getColumnModel().getColumn(0).setMaxWidth(40); // columna 0 más angosta
-        tblHabitaciones.getColumnModel().getColumn(0).setResizable(false); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(0).setPreferredWidth(40); 
+        tblHabitaciones.getColumnModel().getColumn(0).setMinWidth(40); 
+        tblHabitaciones.getColumnModel().getColumn(0).setMaxWidth(40); 
+        tblHabitaciones.getColumnModel().getColumn(0).setResizable(false); 
         
-        tblHabitaciones.getColumnModel().getColumn(1).setPreferredWidth(80);; // columna 0 más angosta
-        tblHabitaciones.getColumnModel().getColumn(1).setMinWidth(80);; // columna 0 más angosta
-        tblHabitaciones.getColumnModel().getColumn(1).setMaxWidth(80); // columna 0 más angosta
-        tblHabitaciones.getColumnModel().getColumn(1).setResizable(false); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(1).setPreferredWidth(120);; 
+        tblHabitaciones.getColumnModel().getColumn(1).setMinWidth(120);; 
+        tblHabitaciones.getColumnModel().getColumn(1).setMaxWidth(120); 
+        tblHabitaciones.getColumnModel().getColumn(1).setResizable(false); 
         
-        tblHabitaciones.getColumnModel().getColumn(2).setPreferredWidth(80); // columna 0 más angosta
-        tblHabitaciones.getColumnModel().getColumn(2).setMinWidth(80); // columna 0 más angosta
-        tblHabitaciones.getColumnModel().getColumn(2).setMaxWidth(80); // columna 0 más angosta
-        tblHabitaciones.getColumnModel().getColumn(2).setResizable(false); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(2).setPreferredWidth(80); 
+        tblHabitaciones.getColumnModel().getColumn(2).setMinWidth(80); 
+        tblHabitaciones.getColumnModel().getColumn(2).setMaxWidth(80); 
+        tblHabitaciones.getColumnModel().getColumn(2).setResizable(false); 
         
-        tblHabitaciones.getColumnModel().getColumn(3).setPreferredWidth(200); // columna 0 más angosta
-        tblHabitaciones.getColumnModel().getColumn(3).setMinWidth(200); // columna 0 más angosta
-        tblHabitaciones.getColumnModel().getColumn(3).setMaxWidth(200); // columna 0 más angosta
-        tblHabitaciones.getColumnModel().getColumn(3).setResizable(false); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(3).setPreferredWidth(250); 
+        tblHabitaciones.getColumnModel().getColumn(3).setMinWidth(250); 
+        tblHabitaciones.getColumnModel().getColumn(3).setMaxWidth(250); 
+        tblHabitaciones.getColumnModel().getColumn(3).setResizable(false); 
         
-        tblHabitaciones.getColumnModel().getColumn(4).setPreferredWidth(90); // columna 0 más angosta
-        tblHabitaciones.getColumnModel().getColumn(4).setMinWidth(90); // columna 0 más angosta
-        tblHabitaciones.getColumnModel().getColumn(4).setMaxWidth(90); // columna 0 más angosta
-        tblHabitaciones.getColumnModel().getColumn(4).setResizable(false); // columna 0 más angosta
+        tblHabitaciones.getColumnModel().getColumn(4).setPreferredWidth(120); 
+        tblHabitaciones.getColumnModel().getColumn(4).setMinWidth(120); 
+        tblHabitaciones.getColumnModel().getColumn(4).setMaxWidth(120); 
+        tblHabitaciones.getColumnModel().getColumn(4).setResizable(false); 
         
         tblHabitaciones.getColumnModel().getColumn(6).setMinWidth(0);
         tblHabitaciones.getColumnModel().getColumn(6).setMaxWidth(0);
@@ -409,7 +409,7 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addComponent(btnConsultarIngresos, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(btnModificarHabitaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(371, Short.MAX_VALUE))
+                .addContainerGap(446, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(204, 102, 0));
@@ -420,8 +420,8 @@ public class PantallaGerente extends javax.swing.JFrame {
         jPanel5.setAlignmentX(0.0F);
         jPanel5.setAlignmentY(0.0F);
 
-        btnMiPerfil.setBackground(new java.awt.Color(0, 153, 51));
-        btnMiPerfil.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnMiPerfil.setBackground(new java.awt.Color(0, 83, 188));
+        btnMiPerfil.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnMiPerfil.setForeground(new java.awt.Color(255, 255, 255));
         btnMiPerfil.setText("Mi perfil");
         btnMiPerfil.setBorder(null);
@@ -433,7 +433,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         });
 
         btnSalir.setBackground(new java.awt.Color(204, 0, 0));
-        btnSalir.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnSalir.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnSalir.setForeground(new java.awt.Color(255, 255, 255));
         btnSalir.setText("Salir");
         btnSalir.setBorder(null);
@@ -444,7 +444,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         });
 
         lblBienvenido.setBackground(new java.awt.Color(204, 102, 0));
-        lblBienvenido.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblBienvenido.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblBienvenido.setForeground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -455,20 +455,24 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addGap(49, 49, 49)
                 .addComponent(lblBienvenido, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnMiPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
-                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnMiPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(51, 51, 51)
+                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnMiPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblBienvenido, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addGap(17, 17, 17)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnSalir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnMiPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(16, 16, 16))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(lblBienvenido, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -779,7 +783,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         ScrollHabitaciones.setBackground(new java.awt.Color(255, 255, 255));
         ScrollHabitaciones.setBorder(null);
 
-        tblHabitaciones.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        tblHabitaciones.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         tblHabitaciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -792,7 +796,7 @@ public class PantallaGerente extends javax.swing.JFrame {
             }
         ));
         tblHabitaciones.setGridColor(new java.awt.Color(0, 0, 0));
-        tblHabitaciones.setRowHeight(25);
+        tblHabitaciones.setRowHeight(35);
         tblHabitaciones.setSelectionBackground(new java.awt.Color(255, 255, 255));
         tblHabitaciones.setSelectionForeground(new java.awt.Color(0, 0, 0));
         ScrollHabitaciones.setViewportView(tblHabitaciones);
@@ -842,10 +846,10 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(txtBuscarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtBuscarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
                 .addComponent(btnBuscarHabitacion)
-                .addGap(10, 10, 10))
+                .addGap(15, 15, 15))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -853,9 +857,9 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addGap(21, 21, 21)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtBuscarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(26, Short.MAX_VALUE))
+                    .addComponent(txtBuscarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         btnModificarHabitacion1.setBackground(new java.awt.Color(0, 153, 51));
@@ -886,7 +890,7 @@ public class PantallaGerente extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelModificarHabitacionesLayout.createSequentialGroup()
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(ScrollHabitaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ScrollHabitaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 690, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnModificarHabitacion1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12))
@@ -899,7 +903,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         ScrollEmpleados.setBorder(null);
 
         tblEmpleados.setBackground(new java.awt.Color(255, 255, 255));
-        tblEmpleados.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        tblEmpleados.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         tblEmpleados.setForeground(new java.awt.Color(0, 0, 0));
         tblEmpleados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -913,7 +917,7 @@ public class PantallaGerente extends javax.swing.JFrame {
             }
         ));
         tblEmpleados.setGridColor(new java.awt.Color(0, 0, 0));
-        tblEmpleados.setRowHeight(25);
+        tblEmpleados.setRowHeight(35);
         tblEmpleados.setSelectionBackground(new java.awt.Color(255, 255, 255));
         tblEmpleados.setSelectionForeground(new java.awt.Color(0, 0, 0));
         ScrollEmpleados.setViewportView(tblEmpleados);
@@ -986,21 +990,21 @@ public class PantallaGerente extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 659, Short.MAX_VALUE)
-                .addComponent(txtBuscarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 592, Short.MAX_VALUE)
+                .addComponent(txtBuscarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
                 .addComponent(btnBuscarEmpleado)
                 .addGap(22, 22, 22))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addGap(23, 23, 23)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(txtBuscarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(26, Short.MAX_VALUE))
+                    .addComponent(txtBuscarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         jSubPanelModificarEmpleado.setBackground(new java.awt.Color(255, 255, 255));
@@ -1194,7 +1198,7 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addComponent(txtTelefonoMod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator12, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
                 .addGroup(jSubPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelarMod, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnConfirmarMod, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1222,12 +1226,12 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(ScrollEmpleados, javax.swing.GroupLayout.PREFERRED_SIZE, 584, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(ScrollEmpleados, javax.swing.GroupLayout.PREFERRED_SIZE, 690, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jSubPanelModificarEmpleado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1254,7 +1258,7 @@ public class PantallaGerente extends javax.swing.JFrame {
             .addGroup(jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanelModificarHabitaciones, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanelModificarEmpleado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanelModificarEmpleado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 862, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
