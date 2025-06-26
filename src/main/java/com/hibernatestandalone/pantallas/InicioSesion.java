@@ -224,7 +224,7 @@ public class InicioSesion extends javax.swing.JFrame {
                             pantalla.setLocationRelativeTo(null);
                             dispose();
                         } else if (usuario instanceof Empleado) {
-                            PantallaEmpleado pantalla = new PantallaEmpleado();
+                            PantallaEmpleado pantalla = new PantallaEmpleado((Empleado) usuario);
                             pantalla.setVisible(true);
                             pantalla.setLocationRelativeTo(null);
                             dispose();

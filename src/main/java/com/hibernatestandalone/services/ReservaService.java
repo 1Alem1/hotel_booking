@@ -1,6 +1,8 @@
 package com.hibernatestandalone.services;
 
+import com.hibernatestandalone.HibernateStandalone.EstadoReserva;
 import com.hibernatestandalone.entity.Habitacion;
+import com.hibernatestandalone.entity.Huesped;
 import com.hibernatestandalone.entity.Reserva;
 import com.hibernatestandalone.services.AbstractService;
 import com.hibernatestandalone.util.HibernateUtil;
@@ -23,5 +25,28 @@ public class ReservaService extends AbstractService {
             return query.list();
         }
     }
+    
+    public Reserva cargarReserva(Date fechaInicio, Date fechaFin, Habitacion habitacion, Huesped huesped) {
+        Transaction tx = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            tx = session.beginTransaction();
+            // Crear la reserva
+            Reserva reserva = new Reserva();
+            reserva.setFechaInicio(fechaInicio);
+            reserva.setFechaFin(fechaFin);
+            reserva.setEstado(EstadoReserva.CONFIRMADA);
+            reserva.setHabitacion(habitacion);
+            reserva.setHuesped(huesped);
+
+            session.persist(reserva);
+            tx.commit();
+            return reserva;
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            throw e;
+        }
+    }
+
+    
 
 }
