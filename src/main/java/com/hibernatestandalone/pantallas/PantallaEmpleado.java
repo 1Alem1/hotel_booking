@@ -19,6 +19,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -899,15 +900,28 @@ public class PantallaEmpleado extends javax.swing.JFrame {
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
           Color color = new Color(204,102,0);
-          Color colorOriginal = new Color(252,167,85);
-          btnReservar.setBackground(color);
-        if (btnReservar.getBackground().equals(color)) {
-            btnListaReservas.setBackground(colorOriginal);
-        } else {
-            btnReservar.setBackground(Color.RED);
-        }
-        jPanelReservar.setVisible(true);
-        jPanelListarReservas.setVisible(false);
+    Color colorOriginal = new Color(252,167,85);
+    btnReservar.setBackground(color);
+    if (btnReservar.getBackground().equals(color)) {
+        btnListaReservas.setBackground(colorOriginal);
+    } else {
+        btnReservar.setBackground(Color.RED);
+    }
+
+    // Mostrar el panel de reserva y ocultar el de listado
+    jPanelReservar.setVisible(true);
+    jPanelListarReservas.setVisible(false);
+
+    // === SETEAR LAS FECHAS ===
+    Calendar calendarioInicio = Calendar.getInstance();
+    calendarioInicio.add(Calendar.DATE, 1); // mañana
+    jFechaInicio.setDate(calendarioInicio.getTime());
+
+    Calendar calendarioFin = (Calendar) calendarioInicio.clone();
+    calendarioFin.add(Calendar.DATE, 1); // 1 días después del inicio
+    jFechafinal.setDate(calendarioFin.getTime());
+    
+    btnBuscarHabitacionActionPerformed(null);
     }//GEN-LAST:event_btnReservarActionPerformed
 
     private void jSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSalirActionPerformed
