@@ -49,6 +49,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     
     public PantallaEmpleado(Empleado empleado) {
         initComponents();
+        jPanelContenido.setVisible(false);
      
         tblHabitacionDisponible.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -749,11 +750,11 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         jPanelReservarLayout.setHorizontalGroup(
             jPanelReservarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanelReservarLayout.createSequentialGroup()
-                .addGap(456, 456, 456)
-                .addComponent(btnReservarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(666, Short.MAX_VALUE))
             .addComponent(jScrollHabitacionDisponible, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanelReservarLayout.createSequentialGroup()
+                .addGap(547, 547, 547)
+                .addComponent(btnReservarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanelReservarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanelCargarHuesped, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -761,11 +762,11 @@ public class PantallaEmpleado extends javax.swing.JFrame {
             jPanelReservarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelReservarLayout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jScrollHabitacionDisponible, javax.swing.GroupLayout.PREFERRED_SIZE, 617, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollHabitacionDisponible, javax.swing.GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(btnReservarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(150, Short.MAX_VALUE))
+                .addGap(27, 27, 27))
             .addGroup(jPanelReservarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanelCargarHuesped, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -899,7 +900,8 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     }//GEN-LAST:event_btnListaReservasActionPerformed
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
-          Color color = new Color(204,102,0);
+    jPanelContenido.setVisible(true);      
+        Color color = new Color(204,102,0);
     Color colorOriginal = new Color(252,167,85);
     btnReservar.setBackground(color);
     if (btnReservar.getBackground().equals(color)) {
