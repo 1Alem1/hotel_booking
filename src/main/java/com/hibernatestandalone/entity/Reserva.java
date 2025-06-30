@@ -25,9 +25,6 @@ public class Reserva {
         private Date fechaInicio;
         @Temporal(TemporalType.DATE)
         private Date fechaFin;
-        private Date checkIn;
-        private Date checkOut;
-        
         @Enumerated(EnumType.STRING)
         private EstadoReserva estado;
         
@@ -67,22 +64,6 @@ public class Reserva {
 
         public void setFechaFin(Date fechaFin) {
             this.fechaFin = fechaFin;
-        }
-
-        public Date getCheckIn() {
-            return checkIn;
-        }
-
-        public void setCheckIn(Date checkIn) {
-            this.checkIn = checkIn;
-        }
-
-        public Date getCheckOut() {
-            return checkOut;
-        }
-
-        public void setCheckOut(Date checkOut) {
-            this.checkOut = checkOut;
         }
 
         public EstadoReserva getEstado() {
