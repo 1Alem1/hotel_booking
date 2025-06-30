@@ -941,9 +941,9 @@
                             <Column editable="true" title="Seleccionar" type="java.lang.Object"/>
                             <Column editable="true" title="Numero" type="java.lang.Object"/>
                             <Column editable="true" title="Piso" type="java.lang.Object"/>
-                            <Column editable="true" title="Capacidad de personas" type="java.lang.Object"/>
-                            <Column editable="true" title="Precio" type="java.lang.Object"/>
-                            <Column editable="true" title="Descripcion" type="java.lang.Object"/>
+                            <Column editable="true" title="Fecha Inicio" type="java.lang.Object"/>
+                            <Column editable="true" title="Fecha Fin" type="java.lang.Object"/>
+                            <Column editable="true" title="Total" type="java.lang.Object"/>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">

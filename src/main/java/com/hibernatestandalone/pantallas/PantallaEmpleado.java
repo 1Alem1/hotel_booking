@@ -102,26 +102,34 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     header.setForeground(Color.WHITE);
     header.setBackground(new Color(232, 130, 0));
 
-    modelo.addColumn("");
-    modelo.addColumn("Numero");
+    // Nuevas columnas
+    modelo.addColumn(""); // Checkbox
+    modelo.addColumn("Número");
     modelo.addColumn("Piso");
-    modelo.addColumn("Capacidad de personas");
-    modelo.addColumn("Precio");
-    modelo.addColumn("Descripcion");
+    modelo.addColumn("Fecha inicio");
+    modelo.addColumn("Fecha fin");
+    modelo.addColumn("Total");
 
-    // Traer reservas con estado CONFIRMADA
     List<Reserva> reservas = reservaService.getReservasConfirmadas();
 
     for (Reserva r : reservas) {
         Habitacion h = r.getHabitacion();
         if (h != null) {
+            Date fechaInicio = r.getFechaInicio();
+            Date fechaFin = r.getFechaFin();
+
+            // Calcular cantidad de días (incluye ambos días)
+            long dias = (fechaFin.getTime() - fechaInicio.getTime()) / (1000 * 60 * 60 * 24);
+            if (dias == 0) dias = 1; // Mínimo un día
+            double total = dias * h.getPrecio_por_noche();
+
             modelo.addRow(new Object[]{
                 false,
                 h.getNumero(),
                 h.getPiso(),
-                h.getCapacidad_personas(),
-                h.getPrecio_por_noche(),
-                h.getDescripcion(),
+                fechaInicio,
+                fechaFin,
+                total
             });
         }
     }
@@ -779,7 +787,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "Seleccionar", "Numero", "Piso", "Capacidad de personas", "Precio", "Descripcion"
+                "Seleccionar", "Numero", "Piso", "Fecha Inicio", "Fecha Fin", "Total"
             }
         ));
         tblHabitacionOcupada.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
