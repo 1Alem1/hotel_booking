@@ -238,6 +238,7 @@ public class PantallaGerente extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -317,6 +318,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setPreferredSize(new java.awt.Dimension(1607, 1000));
 
         jPanel1.setBackground(new java.awt.Color(232, 130, 0));
 
@@ -386,7 +388,7 @@ public class PantallaGerente extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(108, 108, 108)
+                        .addGap(118, 118, 118)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(52, 52, 52)
@@ -409,7 +411,7 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addComponent(btnConsultarIngresos, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(btnModificarHabitaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(446, Short.MAX_VALUE))
+                .addContainerGap(504, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(204, 102, 0));
@@ -710,7 +712,7 @@ public class PantallaGerente extends javax.swing.JFrame {
                         .addComponent(btnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(106, 106, 106)
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(386, Short.MAX_VALUE))
+                .addContainerGap(406, Short.MAX_VALUE))
         );
         jPanelCargarEmpleadoLayout.setVerticalGroup(
             jPanelCargarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -871,7 +873,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         jPanelModificarHabitacionesLayout.setHorizontalGroup(
             jPanelModificarHabitacionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(ScrollHabitaciones, javax.swing.GroupLayout.DEFAULT_SIZE, 1271, Short.MAX_VALUE)
-            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 1271, Short.MAX_VALUE)
+            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 1291, Short.MAX_VALUE)
             .addGroup(jPanelModificarHabitacionesLayout.createSequentialGroup()
                 .addGap(445, 445, 445)
                 .addComponent(btnModificarHabitacion1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1199,7 +1201,7 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addGap(157, 157, 157)
                 .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 1271, Short.MAX_VALUE)
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 1291, Short.MAX_VALUE)
             .addGroup(jPanelModificarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jSubPanelModificarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1231,7 +1233,7 @@ public class PantallaGerente extends javax.swing.JFrame {
             .addGroup(jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanelModificarHabitaciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanelModificarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanelModificarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, 1291, Short.MAX_VALUE))
         );
         jPanelContenidoLayout.setVerticalGroup(
             jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1241,7 +1243,7 @@ public class PantallaGerente extends javax.swing.JFrame {
             .addGroup(jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jPanelModificarHabitaciones, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanelModificarEmpleado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 862, Short.MAX_VALUE))
+                .addComponent(jPanelModificarEmpleado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 920, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -1264,15 +1266,21 @@ public class PantallaGerente extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        jScrollPane1.setViewportView(jPanel2);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1599, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 956, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -1931,6 +1939,7 @@ public class PantallaGerente extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelContenido;
     private javax.swing.JPanel jPanelModificarEmpleado;
     private javax.swing.JPanel jPanelModificarHabitaciones;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator10;
     private javax.swing.JSeparator jSeparator11;
