@@ -1,5 +1,6 @@
 package com.hibernatestandalone.pantallas;
 
+import com.hibernatestandalone.HibernateStandalone.EmailService;
 import com.hibernatestandalone.entity.Empleado;
 import com.hibernatestandalone.entity.Factura;
 import com.hibernatestandalone.entity.Gerente;
@@ -1075,8 +1076,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     }//GEN-LAST:event_txtApellidoHuespedFocusLost
 
     private void btnConfirmarHuespedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarHuespedActionPerformed
-
-        String nombre = txtNombreHuesped.getText().trim();
+ String nombre = txtNombreHuesped.getText().trim();
         String apellido = txtApellidoHuesped.getText().trim();
         String email = txtEmailHuesped.getText().trim();
         String dni = txtDniHuesped.getText().trim();
@@ -1106,7 +1106,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
 
         try {
             // Buscar o crear huésped
-           
+
             Huesped huesped = empleadoService.cargarHuesped(nombre, apellido, email, dni, telefono);
 
             // Buscar habitación
@@ -1117,9 +1117,11 @@ public class PantallaEmpleado extends javax.swing.JFrame {
             }
 
             Reserva reserva = reservaService.cargarReserva(fechaInicio, fechaFin, habitacion, huesped);
-            
+
             Factura factura = facturaService.crearYGuardarFactura(reserva, txtMetodoDePago.getText().trim());
-            
+            EmailService emailService = new EmailService();
+            emailService.enviarCorreoReserva(huesped, reserva, factura);
+
             JOptionPane.showMessageDialog(this, "Reserva confirmada exitosamente.");
 
             // Restaurar interfaz
