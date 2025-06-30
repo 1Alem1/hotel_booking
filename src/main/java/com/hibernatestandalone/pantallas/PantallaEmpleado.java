@@ -1119,9 +1119,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
             Reserva reserva = reservaService.cargarReserva(fechaInicio, fechaFin, habitacion, huesped);
 
             Factura factura = facturaService.crearYGuardarFactura(reserva, txtMetodoDePago.getText().trim());
-            EmailService emailService = new EmailService();
-            emailService.enviarCorreoReserva(huesped, reserva, factura);
-
+            
             JOptionPane.showMessageDialog(this, "Reserva confirmada exitosamente.");
 
             // Restaurar interfaz
@@ -1131,11 +1129,17 @@ public class PantallaEmpleado extends javax.swing.JFrame {
 
             // Opcional: recargar tabla de habitaciones
             cargarHabitacionesEnTabla(fechaInicio, fechaFin);
+            EmailService emailService = new EmailService();
+            emailService.enviarCorreoReserva(huesped, reserva, factura);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al guardar la reserva: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
+        jPanelCargarHuesped.setVisible(false);
+        btnReservarHabitacion.setVisible(true);
+        jScrollHabitacionDisponible.setVisible(true);
+        tblHabitacionDisponible.setVisible(true);
     }//GEN-LAST:event_btnConfirmarHuespedActionPerformed
 
     private void txtMetodoDePagoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMetodoDePagoFocusGained

@@ -11,6 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.util.Date;
 
 
@@ -19,7 +21,9 @@ public class Reserva {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id_reserva;
+        @Temporal(TemporalType.DATE)
         private Date fechaInicio;
+        @Temporal(TemporalType.DATE)
         private Date fechaFin;
         private Date checkIn;
         private Date checkOut;
