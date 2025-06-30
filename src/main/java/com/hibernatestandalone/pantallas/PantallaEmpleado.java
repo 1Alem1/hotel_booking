@@ -107,24 +107,26 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     modelo.addColumn("Capacidad de personas");
     modelo.addColumn("Precio");
     modelo.addColumn("Descripcion");
-    modelo.addColumn("ID");
 
-    List<Habitacion> habitaciones = new HabitacionService().getAll();
-    System.out.println("Habitaciones en tabla ocupadas: " + habitaciones.size());
+    // Traer reservas con estado CONFIRMADA
+    List<Reserva> reservas = reservaService.getReservasConfirmadas();
 
-    for (Habitacion h : habitaciones) {
-        modelo.addRow(new Object[]{
-            false,
-            h.getNumero(),
-            h.getPiso(),
-            h.getCapacidad_personas(),
-            h.getPrecio_por_noche(),
-            h.getDescripcion(),
-            h.getId()
-        });
+    for (Reserva r : reservas) {
+        Habitacion h = r.getHabitacion();
+        if (h != null) {
+            modelo.addRow(new Object[]{
+                false,
+                h.getNumero(),
+                h.getPiso(),
+                h.getCapacidad_personas(),
+                h.getPrecio_por_noche(),
+                h.getDescripcion(),
+            });
+        }
     }
 
-    tblHabitacionOcupada.setModel(modelo); // set antes del listener
+    tblHabitacionOcupada.setModel(modelo);
+
     tblHabitacionOcupada.getModel().addTableModelListener(e -> {
         if (e.getColumn() == 0) {
             for (int i = 0; i < tblHabitacionOcupada.getRowCount(); i++) {
@@ -135,13 +137,9 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         }
     });
 
-    // Config columnas (omitido aquí por brevedad)
-
     sorterHabitacionesOcupadas = new TableRowSorter<>(modelo);
-    sorterHabitacionesOcupadas.setRowFilter(null); // 🔥 sin filtros
+    sorterHabitacionesOcupadas.setRowFilter(null);
     tblHabitacionOcupada.setRowSorter(sorterHabitacionesOcupadas);
-    System.out.println("Filas visibles en tabla ocupadas: " + tblHabitacionOcupada.getRowCount());
-
     tblHabitacionOcupada.getTableHeader().setReorderingAllowed(false);
     tblHabitacionOcupada.revalidate();
     tblHabitacionOcupada.repaint();
@@ -783,6 +781,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
                 "Seleccionar", "Numero", "Piso", "Capacidad de personas", "Precio", "Descripcion"
             }
         ));
+        tblHabitacionOcupada.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tblHabitacionOcupada.setGridColor(new java.awt.Color(0, 0, 0));
         tblHabitacionOcupada.setPreferredSize(new java.awt.Dimension(450, 140));
         tblHabitacionOcupada.setRowHeight(35);
@@ -886,7 +885,8 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnListaReservasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaReservasActionPerformed
-          Color color = new Color(204,102,0);
+    jPanelContenido.setVisible(true);      
+        Color color = new Color(204,102,0);
           Color colorOriginal = new Color(252,167,85);
           btnListaReservas.setBackground(color);
         if (btnListaReservas.getBackground().equals(color)) {
