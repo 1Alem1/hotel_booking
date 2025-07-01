@@ -48,12 +48,17 @@ public class ReservaService extends AbstractService {
     }
 
     public List<Reserva> getReservasConfirmadas() {
-    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-        String hql = "FROM Reserva r WHERE r.estado = :estado";
-        Query<Reserva> query = session.createQuery(hql, Reserva.class);
-        query.setParameter("estado", EstadoReserva.CONFIRMADA);
-        return query.list();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+         String hql = """
+             SELECT r 
+             FROM Reserva r
+             JOIN FETCH r.huesped
+             JOIN FETCH r.habitacion
+             WHERE r.estado = :estado
+         """;
+         return session.createQuery(hql, Reserva.class)
+                 .setParameter("estado", EstadoReserva.CONFIRMADA)
+                 .getResultList();
+        }
     }
-}
-
 }

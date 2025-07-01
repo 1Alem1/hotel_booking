@@ -78,6 +78,27 @@ public class PantallaEmpleado extends javax.swing.JFrame {
                 }
             }
         });
+        
+        tblHabitacionOcupada.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                int col = tblHabitacionOcupada.columnAtPoint(e.getPoint());
+                int viewRow = tblHabitacionOcupada.rowAtPoint(e.getPoint());
+                if (viewRow >= 0 && col == 0) {
+                    if (tblHabitacionOcupada.isEditing()) {
+                        tblHabitacionOcupada.getCellEditor().stopCellEditing();
+                    }
+
+                    DefaultTableModel modelo = (DefaultTableModel) tblHabitacionOcupada.getModel();
+                    int modelRow = tblHabitacionOcupada.convertRowIndexToModel(viewRow);
+
+                    for (int i = 0; i < modelo.getRowCount(); i++) {
+                        modelo.setValueAt(false, i, 0);
+                    }
+                    modelo.setValueAt(true, modelRow, 0);
+                }
+            }
+        });
         cargarReservasEnTabla();
         
         lblBienvenido.setText("Bienvenido, " + empleado.getNombre() + " " + empleado.getApellido());
@@ -85,76 +106,79 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     }
 
     private void cargarReservasEnTabla() {
-    DefaultTableModel modelo = new DefaultTableModel() {
-        @Override
-        public Class<?> getColumnClass(int columnIndex) {
-            return columnIndex == 0 ? Boolean.class : Object.class;
-        }
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return columnIndex == 0 ? Boolean.class : Object.class;
+            }
 
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return column == 0;
-        }
-    };
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column == 0;
+            }
+        };
 
-    JTableHeader header = tblHabitacionOcupada.getTableHeader();
-    header.setFont(new Font("Segoe UI", Font.BOLD, 22));
-    header.setForeground(Color.WHITE);
-    header.setBackground(new Color(232, 130, 0));
+        JTableHeader header = tblHabitacionOcupada.getTableHeader();
+        header.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        header.setForeground(Color.WHITE);
+        header.setBackground(new Color(232, 130, 0));
 
-    // Nuevas columnas
-    modelo.addColumn(""); // Checkbox
-    modelo.addColumn("Número");
-    modelo.addColumn("Piso");
-    modelo.addColumn("Fecha inicio");
-    modelo.addColumn("Fecha fin");
-    modelo.addColumn("Total");
+        // Nuevas columnas
+       modelo.addColumn("");
+       modelo.addColumn("Número");
+       modelo.addColumn("Piso");
+       modelo.addColumn("Fecha inicio");
+       modelo.addColumn("Fecha fin");
+       modelo.addColumn("Check‑in");
+       modelo.addColumn("Check‑out");
+       modelo.addColumn("Huésped");
+       modelo.addColumn("Total");
 
-    List<Reserva> reservas = reservaService.getReservasConfirmadas();
 
-    for (Reserva r : reservas) {
-        Habitacion h = r.getHabitacion();
-        if (h != null) {
-            Date fechaInicio = r.getFechaInicio();
-            Date fechaFin = r.getFechaFin();
+        List<Reserva> reservas = reservaService.getReservasConfirmadas();
+        for (Reserva r : reservas) {
+            Habitacion h = r.getHabitacion();
+            Huesped huesped = r.getHuesped();
+            if (h != null && huesped != null) {
+                Date fInicio = r.getFechaInicio();
+                Date fFin    = r.getFechaFin();
+                Date chkIn   = r.getCheckIn();
+                Date chkOut  = r.getCheckOut();
 
-            // Calcular cantidad de días (incluye ambos días)
-            long dias = (fechaFin.getTime() - fechaInicio.getTime()) / (1000 * 60 * 60 * 24);
-            if (dias == 0) dias = 1; // Mínimo un día
-            double total = dias * h.getPrecio_por_noche();
+                long dias = (fFin.getTime() - fInicio.getTime()) / (1000L * 60 * 60 * 24);
+                if (dias == 0) dias = 1;
+                double total = dias * h.getPrecio_por_noche();
 
-            modelo.addRow(new Object[]{
-                false,
-                h.getNumero(),
-                h.getPiso(),
-                fechaInicio,
-                fechaFin,
-                total
-            });
-        }
-    }
+                // Construyo la cadena Huésped: "DNI / email"
+                String huéspedInfo = huesped.getDni() + " / " + huesped.getEmail();
 
-    tblHabitacionOcupada.setModel(modelo);
-
-    tblHabitacionOcupada.getModel().addTableModelListener(e -> {
-        if (e.getColumn() == 0) {
-            for (int i = 0; i < tblHabitacionOcupada.getRowCount(); i++) {
-                if (i != e.getFirstRow()) {
-                    tblHabitacionOcupada.setValueAt(false, i, 0);
-                }
+                modelo.addRow(new Object[]{
+                    false,
+                    h.getNumero(),
+                    h.getPiso(),
+                    fInicio,
+                    fFin,
+                    chkIn,
+                    chkOut,
+                    huéspedInfo,
+                    total
+                });
             }
         }
-    });
-
-    sorterHabitacionesOcupadas = new TableRowSorter<>(modelo);
-    sorterHabitacionesOcupadas.setRowFilter(null);
-    tblHabitacionOcupada.setRowSorter(sorterHabitacionesOcupadas);
-    tblHabitacionOcupada.getTableHeader().setReorderingAllowed(false);
-    tblHabitacionOcupada.revalidate();
-    tblHabitacionOcupada.repaint();
+        
+        
+        tblHabitacionOcupada.setModel(modelo);
+        aplicarFormatoTablaOcupadas();
+        sorterHabitacionesOcupadas = new TableRowSorter<>(modelo);
+        sorterHabitacionesOcupadas.setRowFilter(null);
+        
+        tblHabitacionOcupada.setRowSorter(sorterHabitacionesOcupadas);
+        tblHabitacionOcupada.getTableHeader().setReorderingAllowed(false);
+        tblHabitacionOcupada.revalidate();
+        tblHabitacionOcupada.repaint();
 }
     
-    private void aplicarFormatoTabla() {
+    private void aplicarFormatoTablaDisponibles() {
         JTableHeader header = tblHabitacionDisponible.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD, 22));
         header.setForeground(Color.WHITE);
@@ -190,8 +214,51 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         tblHabitacionDisponible.getColumnModel().getColumn(6).setMaxWidth(0);
         tblHabitacionDisponible.getColumnModel().getColumn(6).setWidth(0);
         tblHabitacionDisponible.getColumnModel().getColumn(6).setPreferredWidth(0);
-        tblHabitacionDisponible.getColumnModel().getColumn(6).setResizable(false);
+        tblHabitacionDisponible.getColumnModel().getColumn(6).setResizable(false);  
+    }
+    
+     private void aplicarFormatoTablaOcupadas() {
+        JTableHeader header = tblHabitacionOcupada.getTableHeader();
+        header.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        header.setForeground(Color.WHITE);
+        header.setBackground(new Color(232, 130, 0));
+        tblHabitacionOcupada.getTableHeader().setReorderingAllowed(false);
         
+        tblHabitacionOcupada.getColumnModel().getColumn(0).setPreferredWidth(40); 
+        tblHabitacionOcupada.getColumnModel().getColumn(0).setMinWidth(40); 
+        tblHabitacionOcupada.getColumnModel().getColumn(0).setMaxWidth(40); 
+        tblHabitacionOcupada.getColumnModel().getColumn(0).setResizable(false); 
+        
+        tblHabitacionOcupada.getColumnModel().getColumn(1).setPreferredWidth(120);; 
+        tblHabitacionOcupada.getColumnModel().getColumn(1).setMinWidth(120);; 
+        tblHabitacionOcupada.getColumnModel().getColumn(1).setMaxWidth(120); 
+        tblHabitacionOcupada.getColumnModel().getColumn(1).setResizable(false); 
+        
+        tblHabitacionOcupada.getColumnModel().getColumn(2).setPreferredWidth(80); 
+        tblHabitacionOcupada.getColumnModel().getColumn(2).setMinWidth(80); 
+        tblHabitacionOcupada.getColumnModel().getColumn(2).setMaxWidth(80); 
+        tblHabitacionOcupada.getColumnModel().getColumn(2).setResizable(false); 
+        
+        tblHabitacionOcupada.getColumnModel().getColumn(3).setPreferredWidth(200); 
+        tblHabitacionOcupada.getColumnModel().getColumn(3).setMinWidth(200); 
+        tblHabitacionOcupada.getColumnModel().getColumn(3).setMaxWidth(200); 
+        tblHabitacionOcupada.getColumnModel().getColumn(3).setResizable(false); 
+        
+        tblHabitacionOcupada.getColumnModel().getColumn(4).setPreferredWidth(200); 
+        tblHabitacionOcupada.getColumnModel().getColumn(4).setMinWidth(200); 
+        tblHabitacionOcupada.getColumnModel().getColumn(4).setMaxWidth(200); 
+        tblHabitacionOcupada.getColumnModel().getColumn(4).setResizable(false);
+        
+        tblHabitacionOcupada.getColumnModel().getColumn(5).setPreferredWidth(200); 
+        tblHabitacionOcupada.getColumnModel().getColumn(5).setMinWidth(200); 
+        tblHabitacionOcupada.getColumnModel().getColumn(5).setMaxWidth(200); 
+        tblHabitacionOcupada.getColumnModel().getColumn(5).setResizable(false); 
+        
+        tblHabitacionOcupada.getColumnModel().getColumn(6).setMinWidth(200);
+        tblHabitacionOcupada.getColumnModel().getColumn(6).setMaxWidth(200);
+        tblHabitacionOcupada.getColumnModel().getColumn(6).setWidth(200);
+        tblHabitacionOcupada.getColumnModel().getColumn(6).setPreferredWidth(200);
+        tblHabitacionOcupada.getColumnModel().getColumn(6).setResizable(false);
     }
 
     //Hay qeu cambiarle el sorter porque carga tablas de menos
@@ -229,7 +296,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         tblHabitacionDisponible.setModel(modelo);
 
         // reaplicar formato
-        aplicarFormatoTabla();
+        aplicarFormatoTablaDisponibles();
 
         // actualizar sorter
         sorterHabitacionesDisponibles = new TableRowSorter<>(modelo);
@@ -296,6 +363,8 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         tblHabitacionOcupada = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
+        txtBuscarReserva = new javax.swing.JTextField();
+        btnBuscarReserva = new javax.swing.JButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -804,6 +873,34 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("LISTA DE RESERVAS");
 
+        txtBuscarReserva.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtBuscarReserva.setText("Buscar reserva por DNI o email");
+        txtBuscarReserva.setBorder(null);
+        txtBuscarReserva.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtBuscarReservaFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtBuscarReservaFocusLost(evt);
+            }
+        });
+        txtBuscarReserva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscarReservaActionPerformed(evt);
+            }
+        });
+
+        btnBuscarReserva.setBackground(new java.awt.Color(56, 121, 185));
+        btnBuscarReserva.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnBuscarReserva.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscarReserva.setText("BUSCAR");
+        btnBuscarReserva.setFocusPainted(false);
+        btnBuscarReserva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarReservaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -811,13 +908,20 @@ public class PantallaEmpleado extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(jLabel3)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtBuscarReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnBuscarReserva)
+                .addGap(25, 25, 25))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(jLabel3)
+                .addGap(22, 22, 22)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(btnBuscarReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBuscarReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
 
@@ -897,10 +1001,10 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnListaReservasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaReservasActionPerformed
-    jPanelContenido.setVisible(true);      
+        jPanelContenido.setVisible(true);      
         Color color = new Color(204,102,0);
-          Color colorOriginal = new Color(252,167,85);
-          btnListaReservas.setBackground(color);
+        Color colorOriginal = new Color(252,167,85);
+        btnListaReservas.setBackground(color);
         if (btnListaReservas.getBackground().equals(color)) {
             btnReservar.setBackground(colorOriginal);
         } else {
@@ -912,30 +1016,30 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     }//GEN-LAST:event_btnListaReservasActionPerformed
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
-    jPanelContenido.setVisible(true);      
-        Color color = new Color(204,102,0);
-    Color colorOriginal = new Color(252,167,85);
-    btnReservar.setBackground(color);
-    if (btnReservar.getBackground().equals(color)) {
-        btnListaReservas.setBackground(colorOriginal);
-    } else {
-        btnReservar.setBackground(Color.RED);
-    }
+        jPanelContenido.setVisible(true);      
+            Color color = new Color(204,102,0);
+        Color colorOriginal = new Color(252,167,85);
+        btnReservar.setBackground(color);
+        if (btnReservar.getBackground().equals(color)) {
+            btnListaReservas.setBackground(colorOriginal);
+        } else {
+            btnReservar.setBackground(Color.RED);
+        }
 
-    // Mostrar el panel de reserva y ocultar el de listado
-    jPanelReservar.setVisible(true);
-    jPanelListarReservas.setVisible(false);
+        // Mostrar el panel de reserva y ocultar el de listado
+        jPanelReservar.setVisible(true);
+        jPanelListarReservas.setVisible(false);
 
-    // === SETEAR LAS FECHAS ===
-    Calendar calendarioInicio = Calendar.getInstance();
-    calendarioInicio.add(Calendar.DATE, 1); // mañana
-    jFechaInicio.setDate(calendarioInicio.getTime());
+        // === SETEAR LAS FECHAS ===
+        Calendar calendarioInicio = Calendar.getInstance();
+        calendarioInicio.add(Calendar.DATE, 1); // mañana
+        jFechaInicio.setDate(calendarioInicio.getTime());
 
-    Calendar calendarioFin = (Calendar) calendarioInicio.clone();
-    calendarioFin.add(Calendar.DATE, 1); // 1 días después del inicio
-    jFechafinal.setDate(calendarioFin.getTime());
-    
-    btnBuscarHabitacionActionPerformed(null);
+        Calendar calendarioFin = (Calendar) calendarioInicio.clone();
+        calendarioFin.add(Calendar.DATE, 1); // 1 días después del inicio
+        jFechafinal.setDate(calendarioFin.getTime());
+
+        btnBuscarHabitacionActionPerformed(null);
     }//GEN-LAST:event_btnReservarActionPerformed
 
     private void jSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSalirActionPerformed
@@ -1175,11 +1279,42 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtApellidoHuespedActionPerformed
 
+    private void txtBuscarReservaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBuscarReservaFocusGained
+        if (txtBuscarReserva.getText().equals("Buscar reserva por DNI o email")) {
+            txtBuscarReserva.setText("");
+            txtBuscarReserva.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_txtBuscarReservaFocusGained
+
+    private void txtBuscarReservaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBuscarReservaFocusLost
+        if (txtBuscarReserva.getText().isEmpty()) {
+            txtBuscarReserva.setForeground(new java.awt.Color(150, 150, 150));
+            txtBuscarReserva.setText("Buscar reserva por DNI o email");
+        }
+    }//GEN-LAST:event_txtBuscarReservaFocusLost
+
+    private void txtBuscarReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarReservaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBuscarReservaActionPerformed
+
+    private void btnBuscarReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarReservaActionPerformed
+        String filtro = txtBuscarReserva.getText().trim();
+        if (filtro.isEmpty() || filtro.equalsIgnoreCase("Buscar reserva por DNI o email")) {
+            sorterHabitacionesOcupadas.setRowFilter(null);  // Mostrar todo
+        } else {
+            // Buscamos en las columnas 1 a 7 (donde la 7 es Huésped: DNI/email)
+            sorterHabitacionesOcupadas.setRowFilter(
+                RowFilter.regexFilter("(?i)" + Pattern.quote(filtro), 7)
+            );
+        }
+    }//GEN-LAST:event_btnBuscarReservaActionPerformed
+
   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Check_in;
     private javax.swing.JButton btnBuscarHabitacion;
+    private javax.swing.JButton btnBuscarReserva;
     private javax.swing.JButton btnCancelarHuesped;
     private javax.swing.JButton btnConfirmarHuesped;
     private javax.swing.JButton btnListaReservas;
@@ -1224,6 +1359,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     private javax.swing.JTable tblHabitacionDisponible;
     private javax.swing.JTable tblHabitacionOcupada;
     private javax.swing.JTextField txtApellidoHuesped;
+    private javax.swing.JTextField txtBuscarReserva;
     private javax.swing.JTextField txtDniHuesped;
     private javax.swing.JTextField txtEmailHuesped;
     private javax.swing.JTextField txtMetodoDePago;
