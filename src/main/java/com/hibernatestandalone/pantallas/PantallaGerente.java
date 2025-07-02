@@ -1,5 +1,7 @@
 package com.hibernatestandalone.pantallas;
 
+import com.hibernatestandalone.HibernateStandalone.GenerarDocumento;
+import com.hibernatestandalone.HibernateStandalone.GenerarPdfGerente;
 import com.hibernatestandalone.entity.Empleado;
 import com.hibernatestandalone.entity.Gerente;
 import com.hibernatestandalone.entity.Habitacion;
@@ -7,11 +9,15 @@ import com.hibernatestandalone.entity.Usuario;
 import com.hibernatestandalone.services.EmpleadoService;
 import com.hibernatestandalone.services.GerenteService;
 import com.hibernatestandalone.services.HabitacionService;
+import com.hibernatestandalone.services.ReservaService;
 import com.hibernatestandalone.services.UsuarioService;
 import java.awt.Color;
 import java.awt.Font;
+import java.io.File;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -277,6 +283,14 @@ public class PantallaGerente extends javax.swing.JFrame {
         jSeparator6 = new javax.swing.JSeparator();
         jSeparator7 = new javax.swing.JSeparator();
         jPanelConsultarIngresos = new javax.swing.JPanel();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jPanel10 = new javax.swing.JPanel();
+        JfechaInicio = new com.toedter.calendar.JDateChooser();
+        Jfechafinal = new com.toedter.calendar.JDateChooser();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        btngenerarInforme = new javax.swing.JButton();
         jPanelModificarHabitaciones = new javax.swing.JPanel();
         ScrollHabitaciones = new javax.swing.JScrollPane();
         tblHabitaciones = new javax.swing.JTable();
@@ -763,15 +777,102 @@ public class PantallaGerente extends javax.swing.JFrame {
 
         jPanelConsultarIngresos.setBackground(new java.awt.Color(255, 255, 255));
 
+        jPanel9.setBackground(new java.awt.Color(232, 130, 0));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("GENERAR INFORME ");
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGap(61, 61, 61)
+                .addComponent(jLabel5)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGap(41, 41, 41)
+                .addComponent(jLabel5)
+                .addContainerGap(41, Short.MAX_VALUE))
+        );
+
+        jPanel10.setBackground(new java.awt.Color(232, 130, 0));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel6.setText("Ingresar Fecha Inicio");
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel7.setText("Ingresar Fecha Final");
+
+        btngenerarInforme.setBackground(new java.awt.Color(0, 153, 51));
+        btngenerarInforme.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btngenerarInforme.setText("GENERAR");
+        btngenerarInforme.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btngenerarInformeActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGap(113, 113, 113)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel6))
+                .addGap(72, 72, 72)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addComponent(JfechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
+                        .addComponent(btngenerarInforme, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(59, 59, 59))
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addComponent(Jfechafinal, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addGap(69, 69, 69)
+                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel6)
+                            .addComponent(JfechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addGap(87, 87, 87)
+                        .addComponent(btngenerarInforme, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(Jfechafinal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(103, 103, 103))
+        );
+
         javax.swing.GroupLayout jPanelConsultarIngresosLayout = new javax.swing.GroupLayout(jPanelConsultarIngresos);
         jPanelConsultarIngresos.setLayout(jPanelConsultarIngresosLayout);
         jPanelConsultarIngresosLayout.setHorizontalGroup(
             jPanelConsultarIngresosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 788, Short.MAX_VALUE)
+            .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanelConsultarIngresosLayout.createSequentialGroup()
+                .addGap(100, 100, 100)
+                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(258, Short.MAX_VALUE))
         );
         jPanelConsultarIngresosLayout.setVerticalGroup(
             jPanelConsultarIngresosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 790, Short.MAX_VALUE)
+            .addGroup(jPanelConsultarIngresosLayout.createSequentialGroup()
+                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(179, 179, 179)
+                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(356, Short.MAX_VALUE))
         );
 
         jPanelModificarHabitaciones.setBackground(new java.awt.Color(255, 255, 255));
@@ -994,7 +1095,7 @@ public class PantallaGerente extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(txtBuscarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         jSubPanelModificarEmpleado.setBackground(new java.awt.Color(255, 255, 255));
@@ -1836,7 +1937,10 @@ public class PantallaGerente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarHabitacionActionPerformed
 
     private void btnConsultarIngresosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarIngresosActionPerformed
-        // TODO add your handling code here:
+        jPanelCargarEmpleado.setVisible(false);
+        jPanelConsultarIngresos.setVisible(true);
+        jPanelModificarHabitaciones.setVisible(false);
+        jPanelModificarEmpleado.setVisible(false);
     }//GEN-LAST:event_btnConsultarIngresosActionPerformed
 
     private void btnModificarHabitacion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarHabitacion1ActionPerformed
@@ -1902,9 +2006,43 @@ public class PantallaGerente extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnModificarHabitacion1ActionPerformed
+
+    private void btngenerarInformeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btngenerarInformeActionPerformed
+JFileChooser fileChooser = new JFileChooser();
+fileChooser.setDialogTitle("Seleccionar carpeta para guardar el PDF");
+fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+int seleccion = fileChooser.showSaveDialog(this); // this = JFrame actual
+
+if (seleccion == JFileChooser.APPROVE_OPTION) {
+    File carpeta = fileChooser.getSelectedFile();
+
+    // Obtener fechas
+    Date desde =JfechaInicio.getDate();
+    Date hasta = Jfechafinal.getDate();
+ 
+    if (desde == null || hasta == null) {
+        JOptionPane.showMessageDialog(this, "Debe seleccionar ambas fechas.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Lógica para generar el PDF
+    ReservaService reservaService = new ReservaService();
+    List<Object[]> datos = reservaService.getIngresosPorHabitacion(desde, hasta);
+
+    String rutaArchivo = carpeta.getAbsolutePath() + File.separator + "reporte_gerente.pdf";
+
+     GenerarDocumento generador = new GenerarPdfGerente(datos, desde, hasta);
+    generador.generarPdf(rutaArchivo);
+
+    JOptionPane.showMessageDialog(this, "PDF generado exitosamente en:\n" + rutaArchivo);
+}        // TODO add your handling code here:
+    }//GEN-LAST:event_btngenerarInformeActionPerformed
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.toedter.calendar.JDateChooser JfechaInicio;
+    private com.toedter.calendar.JDateChooser Jfechafinal;
     private javax.swing.JScrollPane ScrollEmpleados;
     private javax.swing.JScrollPane ScrollHabitaciones;
     private javax.swing.JButton btnBuscarEmpleado;
@@ -1922,11 +2060,16 @@ public class PantallaGerente extends javax.swing.JFrame {
     private javax.swing.JButton btnModificarHabitacion1;
     private javax.swing.JButton btnModificarHabitaciones;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JButton btngenerarInforme;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -1934,6 +2077,7 @@ public class PantallaGerente extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel jPanelCargarEmpleado;
     private javax.swing.JPanel jPanelConsultarIngresos;
     private javax.swing.JPanel jPanelContenido;

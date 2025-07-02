@@ -110,4 +110,25 @@ public class ReservaService extends AbstractService {
         throw e;
     }
 }
+     public List<Object[]> getIngresosPorHabitacion(Date desde, Date hasta) {
+       try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = """
+                SELECT h.numero, COUNT(r), SUM(f.total)
+                FROM Reserva r
+                JOIN r.habitacion h
+                JOIN r.factura f
+                WHERE r.estado = :estadoReservaFinalizada
+                AND r.checkIn <= :hasta AND r.checkOut >= :desde
+                GROUP BY h.numero
+                """;
+
+            Query<Object[]> query = session.createQuery(hql, Object[].class);
+
+            query.setParameter("estadoReservaFinalizada", EstadoReserva.CHECK_OUT);
+            query.setParameter("desde", desde);
+            query.setParameter("hasta", hasta);
+
+            return query.getResultList();
+        }
+    }
 }
