@@ -1262,7 +1262,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     }//GEN-LAST:event_txtApellidoHuespedFocusLost
 
     private void btnConfirmarHuespedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarHuespedActionPerformed
- String nombre = txtNombreHuesped.getText().trim();
+        String nombre = txtNombreHuesped.getText().trim();
         String apellido = txtApellidoHuesped.getText().trim();
         String email = txtEmailHuesped.getText().trim();
         String dni = txtDniHuesped.getText().trim();
@@ -1307,16 +1307,20 @@ public class PantallaEmpleado extends javax.swing.JFrame {
             Factura factura = facturaService.crearYGuardarFactura(reserva, txtMetodoDePago.getText().trim());
             
             JOptionPane.showMessageDialog(this, "Reserva confirmada exitosamente.");
-
-            // Restaurar interfaz
-            jPanelCargarHuesped.setVisible(false);
-            jScrollHabitacionDisponible.setVisible(true);
-            idHabitacionActual = null;
+            
+            new Thread(() -> {
+                try {
+                    EmailService emailService = new EmailService();
+                    emailService.enviarCorreoReserva(huesped, reserva, factura);
+                } catch (Exception ex) {
+                    System.err.println("Error al enviar el correo: " + ex.getMessage());
+                }
+            }).start();
 
             // Opcional: recargar tabla de habitaciones
             cargarHabitacionesEnTabla(fechaInicio, fechaFin);
-            EmailService emailService = new EmailService();
-            emailService.enviarCorreoReserva(huesped, reserva, factura);
+            cargarReservasEnTabla();
+            
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al guardar la reserva: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1428,10 +1432,10 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         }
     }
 
-    if (alMenosUnoProcesado) {
-        cargarReservasEnTabla(); // Refresca la tabla para mostrar los cambios
-        JOptionPane.showMessageDialog(null, "Check-in realizado correctamente.");
-    }
+        if (alMenosUnoProcesado) {
+            cargarReservasEnTabla(); // Refresca la tabla para mostrar los cambios
+            JOptionPane.showMessageDialog(null, "Check-in realizado correctamente.");
+        }
     }//GEN-LAST:event_btnCheckinActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
