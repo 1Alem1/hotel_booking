@@ -1,6 +1,7 @@
 package com.hibernatestandalone.pantallas;
 
 import com.hibernatestandalone.HibernateStandalone.EmailService;
+import com.hibernatestandalone.HibernateStandalone.EstadoReserva;
 import com.hibernatestandalone.entity.Empleado;
 import com.hibernatestandalone.entity.Factura;
 import com.hibernatestandalone.entity.Gerente;
@@ -20,6 +21,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -106,76 +108,73 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     }
 
     private void cargarReservasEnTabla() {
-        DefaultTableModel modelo = new DefaultTableModel() {
-            @Override
-            public Class<?> getColumnClass(int columnIndex) {
-                return columnIndex == 0 ? Boolean.class : Object.class;
-            }
-
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return column == 0;
-            }
-        };
-
-        JTableHeader header = tblHabitacionOcupada.getTableHeader();
-        header.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        header.setForeground(Color.WHITE);
-        header.setBackground(new Color(232, 130, 0));
-
-        // Nuevas columnas
-       modelo.addColumn("");
-       modelo.addColumn("Número");
-       modelo.addColumn("Piso");
-       modelo.addColumn("Fecha inicio");
-       modelo.addColumn("Fecha fin");
-       modelo.addColumn("Check‑in");
-       modelo.addColumn("Check‑out");
-       modelo.addColumn("Huésped");
-       modelo.addColumn("Total");
-
-
-        List<Reserva> reservas = reservaService.getReservasConfirmadas();
-        for (Reserva r : reservas) {
-            Habitacion h = r.getHabitacion();
-            Huesped huesped = r.getHuesped();
-            if (h != null && huesped != null) {
-                Date fInicio = r.getFechaInicio();
-                Date fFin    = r.getFechaFin();
-                Date chkIn   = r.getCheckIn();
-                Date chkOut  = r.getCheckOut();
-
-                long dias = (fFin.getTime() - fInicio.getTime()) / (1000L * 60 * 60 * 24);
-                if (dias == 0) dias = 1;
-                double total = dias * h.getPrecio_por_noche();
-
-                // Construyo la cadena Huésped: "DNI / email"
-                String huéspedInfo = huesped.getDni() + " / " + huesped.getEmail();
-
-                modelo.addRow(new Object[]{
-                    false,
-                    h.getNumero(),
-                    h.getPiso(),
-                    fInicio,
-                    fFin,
-                    chkIn,
-                    chkOut,
-                    huéspedInfo,
-                    total
-                });
-            }
+    DefaultTableModel modelo = new DefaultTableModel() {
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            return columnIndex == 0 ? Boolean.class : Object.class;
         }
-        
-        
-        tblHabitacionOcupada.setModel(modelo);
-        aplicarFormatoTablaOcupadas();
-        sorterHabitacionesOcupadas = new TableRowSorter<>(modelo);
-        sorterHabitacionesOcupadas.setRowFilter(null);
-        
-        tblHabitacionOcupada.setRowSorter(sorterHabitacionesOcupadas);
-        tblHabitacionOcupada.getTableHeader().setReorderingAllowed(false);
-        tblHabitacionOcupada.revalidate();
-        tblHabitacionOcupada.repaint();
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return column == 0;
+        }
+    };
+
+    JTableHeader header = tblHabitacionOcupada.getTableHeader();
+    header.setFont(new Font("Segoe UI", Font.BOLD, 22));
+    header.setForeground(Color.WHITE);
+    header.setBackground(new Color(232, 130, 0));
+
+    // Nuevas columnas
+    modelo.addColumn(""); // Checkbox
+    modelo.addColumn("Número");
+    modelo.addColumn("Piso");
+    modelo.addColumn("Fecha inicio");
+    modelo.addColumn("Fecha fin");
+    modelo.addColumn("Check-in");
+    modelo.addColumn("Check-out");
+    modelo.addColumn("Huésped");
+    modelo.addColumn("Total");
+
+    // Traer reservas con estado CONFIRMADA o CHECKIN
+    List<Reserva> reservas = reservaService.getReservasActivas();
+    for (Reserva r : reservas) {
+        Habitacion h = r.getHabitacion();
+        Huesped huesped = r.getHuesped();
+        if (h != null && huesped != null) {
+            Date fInicio = r.getFechaInicio();
+            Date fFin = r.getFechaFin();
+            Date chkIn = r.getCheckIn();
+            Date chkOut = r.getCheckOut();
+
+            long dias = (fFin.getTime() - fInicio.getTime()) / (1000L * 60 * 60 * 24);
+            if (dias == 0) dias = 1;
+            double total = dias * h.getPrecio_por_noche();
+
+            String huéspedInfo = huesped.getDni() + " / " + huesped.getEmail();
+
+            modelo.addRow(new Object[]{
+                false,
+                h.getNumero(),
+                h.getPiso(),
+                fInicio,
+                fFin,
+                chkIn,
+                chkOut,
+                huéspedInfo,
+                total
+            });
+        }
+    }
+
+    tblHabitacionOcupada.setModel(modelo);
+    aplicarFormatoTablaOcupadas(); // suponiendo que esto ya lo tenés
+    sorterHabitacionesOcupadas = new TableRowSorter<>(modelo);
+    sorterHabitacionesOcupadas.setRowFilter(null);
+    tblHabitacionOcupada.setRowSorter(sorterHabitacionesOcupadas);
+    tblHabitacionOcupada.getTableHeader().setReorderingAllowed(false);
+    tblHabitacionOcupada.revalidate();
+    tblHabitacionOcupada.repaint();
 }
     
     private void aplicarFormatoTablaDisponibles() {
@@ -365,6 +364,10 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         txtBuscarReserva = new javax.swing.JTextField();
         btnBuscarReserva = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        btnCheckin = new javax.swing.JButton();
+        btnCheckout = new javax.swing.JButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -925,12 +928,68 @@ public class PantallaEmpleado extends javax.swing.JFrame {
                 .addContainerGap(28, Short.MAX_VALUE))
         );
 
+        btnModificar.setBackground(new java.awt.Color(0, 153, 255));
+        btnModificar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnModificar.setForeground(new java.awt.Color(255, 255, 255));
+        btnModificar.setText("MODIFICAR");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
+
+        btnCancelar.setBackground(new java.awt.Color(204, 0, 0));
+        btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancelar.setText("CANCELAR");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
+        btnCheckin.setBackground(new java.awt.Color(0, 153, 51));
+        btnCheckin.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnCheckin.setForeground(new java.awt.Color(255, 255, 255));
+        btnCheckin.setText("CHECK-IN");
+        btnCheckin.setToolTipText("");
+        btnCheckin.setBorder(null);
+        btnCheckin.setFocusPainted(false);
+        btnCheckin.setMaximumSize(new java.awt.Dimension(101, 25));
+        btnCheckin.setMinimumSize(new java.awt.Dimension(101, 25));
+        btnCheckin.setPreferredSize(new java.awt.Dimension(101, 25));
+        btnCheckin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCheckinActionPerformed(evt);
+            }
+        });
+
+        btnCheckout.setBackground(new java.awt.Color(102, 102, 102));
+        btnCheckout.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnCheckout.setForeground(new java.awt.Color(255, 255, 255));
+        btnCheckout.setText("CHECK-OUT");
+        btnCheckout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCheckoutActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelListarReservasLayout = new javax.swing.GroupLayout(jPanelListarReservas);
         jPanelListarReservas.setLayout(jPanelListarReservasLayout);
         jPanelListarReservasLayout.setHorizontalGroup(
             jPanelListarReservasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1457, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanelListarReservasLayout.createSequentialGroup()
+                .addGap(126, 126, 126)
+                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(49, 49, 49)
+                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(389, 389, 389)
+                .addComponent(btnCheckin, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46)
+                .addComponent(btnCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(69, Short.MAX_VALUE))
         );
         jPanelListarReservasLayout.setVerticalGroup(
             jPanelListarReservasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -938,7 +997,19 @@ public class PantallaEmpleado extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 719, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(78, 78, 78))
+                .addGroup(jPanelListarReservasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelListarReservasLayout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addGroup(jPanelListarReservasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(31, 31, 31))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelListarReservasLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelListarReservasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnCheckin, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(29, 29, 29))))
         );
 
         javax.swing.GroupLayout jPanelContenidoLayout = new javax.swing.GroupLayout(jPanelContenido);
@@ -1309,15 +1380,169 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnBuscarReservaActionPerformed
 
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnCheckinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckinActionPerformed
+ // Obtenemos la lista original de reservas activas (confirmadas o checkin)
+    List<Reserva> reservas = reservaService.getReservasActivas();
+
+    DefaultTableModel model = (DefaultTableModel) tblHabitacionOcupada.getModel();
+    List<Integer> filasSeleccionadas = new ArrayList<>();
+
+    // Detectamos qué filas están seleccionadas (checkbox en columna 0)
+    for (int i = 0; i < model.getRowCount(); i++) {
+        Boolean marcado = (Boolean) model.getValueAt(i, 0);
+        if (marcado != null && marcado) {
+            filasSeleccionadas.add(i);
+        }
+    }
+
+    if (filasSeleccionadas.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Debe seleccionar al menos una reserva para hacer check-in.");
+        return;
+    }
+
+    boolean alMenosUnoProcesado = false;
+    Date hoy = new Date();
+
+    for (int filaVista : filasSeleccionadas) {
+        int filaModelo = tblHabitacionOcupada.convertRowIndexToModel(filaVista);
+        Reserva reserva = reservas.get(filaModelo);
+
+        if (reserva.getFechaInicio().after(hoy)) {
+            JOptionPane.showMessageDialog(null, "No se puede hacer el check-in antes de la fecha de inicio: " + reserva.getFechaInicio());
+            continue;
+        }
+
+        try {
+            // Actualizamos el estado a CHECK_IN y la fecha checkIn
+            reserva.setEstado(EstadoReserva.CHECK_IN);
+            reserva.setCheckIn(hoy);
+            reservaService.actualizarReserva(reserva);
+            alMenosUnoProcesado = true;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al actualizar reserva: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    if (alMenosUnoProcesado) {
+        cargarReservasEnTabla(); // Refresca la tabla para mostrar los cambios
+        JOptionPane.showMessageDialog(null, "Check-in realizado correctamente.");
+    }
+    }//GEN-LAST:event_btnCheckinActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+    List<Reserva> reservas = reservaService.getReservasActivas(); // Solo CONFIRMADA o CHECK_IN
+    DefaultTableModel model = (DefaultTableModel) tblHabitacionOcupada.getModel();
+    List<Integer> filasSeleccionadas = new ArrayList<>();
+
+    for (int i = 0; i < model.getRowCount(); i++) {
+        Boolean marcado = (Boolean) model.getValueAt(i, 0);
+        if (marcado != null && marcado) {
+            filasSeleccionadas.add(i);
+        }
+    }
+
+    if (filasSeleccionadas.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Debe seleccionar al menos una reserva para cancelar.");
+        return;
+    }
+
+    int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea cancelar la reserva?", "Confirmar cancelación", JOptionPane.YES_NO_OPTION);
+    if (confirmacion != JOptionPane.YES_OPTION) return;
+
+    boolean alMenosUnaCancelada = false;
+
+    for (int fila : filasSeleccionadas) {
+        int filaModelo = tblHabitacionOcupada.convertRowIndexToModel(fila);
+        Reserva reserva = reservas.get(filaModelo);
+
+        // ✅ Validar estado
+        EstadoReserva estadoActual = reserva.getEstado();
+        if (estadoActual == EstadoReserva.CHECK_IN || estadoActual == EstadoReserva.CHECK_OUT || estadoActual == EstadoReserva.CANCELADA) {
+            JOptionPane.showMessageDialog(this,
+                "No se puede cancelar una reserva en estado " + estadoActual + ".");
+            continue;
+        }
+
+        try {
+            reserva.setEstado(EstadoReserva.CANCELADA);
+            reservaService.actualizarReserva(reserva);
+            alMenosUnaCancelada = true;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cancelar la reserva: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    if (alMenosUnaCancelada) {
+        cargarReservasEnTabla(); // Refresca
+        JOptionPane.showMessageDialog(this, "Reserva cancelada correctamente.");
+    }
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnCheckoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckoutActionPerformed
+    List<Reserva> reservas = reservaService.getReservasActivas(); // Trae CONFIRMADA y CHECK_IN
+    DefaultTableModel model = (DefaultTableModel) tblHabitacionOcupada.getModel();
+    List<Integer> filasSeleccionadas = new ArrayList<>();
+
+    // Buscar reservas marcadas
+    for (int i = 0; i < model.getRowCount(); i++) {
+        Boolean marcado = (Boolean) model.getValueAt(i, 0);
+        if (marcado != null && marcado) {
+            filasSeleccionadas.add(i);
+        }
+    }
+
+    if (filasSeleccionadas.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Debe seleccionar al menos una reserva para hacer check-out.");
+        return;
+    }
+
+    boolean alMenosUnoProcesado = false;
+
+    for (int fila : filasSeleccionadas) {
+        int filaModelo = tblHabitacionOcupada.convertRowIndexToModel(fila);
+        Reserva reserva = reservas.get(filaModelo);
+
+        // Verifica que el estado actual sea CHECK_IN
+        if (reserva.getEstado() != EstadoReserva.CHECK_IN) {
+            JOptionPane.showMessageDialog(this,
+                "La reserva seleccionada no está en estado CHECK_IN. No se puede hacer check-out.");
+            continue;
+        }
+
+        try {
+            reservaService.hacerCheckOut(reserva.getId_reserva()); // Guarda estado y hora de salida
+            alMenosUnoProcesado = true;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al hacer check-out: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    if (alMenosUnoProcesado) {
+        cargarReservasEnTabla(); // Refresca tabla
+        JOptionPane.showMessageDialog(this, "Check-out realizado correctamente.");
+    }
+    }//GEN-LAST:event_btnCheckoutActionPerformed
+
   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Check_in;
     private javax.swing.JButton btnBuscarHabitacion;
     private javax.swing.JButton btnBuscarReserva;
+    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCancelarHuesped;
+    private javax.swing.JButton btnCheckin;
+    private javax.swing.JButton btnCheckout;
     private javax.swing.JButton btnConfirmarHuesped;
     private javax.swing.JButton btnListaReservas;
+    private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnReservar;
     private javax.swing.JButton btnReservarHabitacion;
     private javax.swing.JLabel check_out;

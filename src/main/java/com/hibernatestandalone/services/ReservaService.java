@@ -47,18 +47,67 @@ public class ReservaService extends AbstractService {
         }
     }
 
-    public List<Reserva> getReservasConfirmadas() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-         String hql = """
-             SELECT r 
-             FROM Reserva r
-             JOIN FETCH r.huesped
-             JOIN FETCH r.habitacion
-             WHERE r.estado = :estado
-         """;
-         return session.createQuery(hql, Reserva.class)
-                 .setParameter("estado", EstadoReserva.CONFIRMADA)
-                 .getResultList();
-        }
+    public List<Reserva> getReservasActivas() {
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        String hql = "FROM Reserva r WHERE r.estado = :estado1 OR r.estado = :estado2";
+        Query<Reserva> query = session.createQuery(hql, Reserva.class);
+        query.setParameter("estado1", EstadoReserva.CONFIRMADA);
+        query.setParameter("estado2", EstadoReserva.CHECK_IN);
+        return query.list();
     }
+}
+    
+    public void actualizarReserva(Reserva reserva) {
+    Transaction tx = null;
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        tx = session.beginTransaction();
+        session.merge(reserva);
+        tx.commit();
+    } catch (Exception e) {
+        if (tx != null) tx.rollback();
+        throw e;
+    }
+}
+    
+    public void hacerCheckIn(Long idReserva) {
+    Transaction tx = null;
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        tx = session.beginTransaction();
+
+        Reserva reserva = session.find(Reserva.class, idReserva);
+
+        if (reserva != null) {
+            reserva.setEstado(EstadoReserva.CHECK_IN);
+            reserva.setCheckIn(new Date());
+            session.merge(reserva);
+            tx.commit();
+        } else {
+            throw new RuntimeException("Reserva no encontrada con id: " + idReserva);
+        }
+    } catch (Exception e) {
+        if (tx != null) tx.rollback();
+        throw e;
+    }
+    }
+    
+    public void hacerCheckOut(Long idReserva) {
+    Transaction tx = null;
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        tx = session.beginTransaction();
+
+        Reserva reserva = session.find(Reserva.class, idReserva);
+
+        if (reserva != null) {
+            reserva.setEstado(EstadoReserva.CHECK_OUT);
+            reserva.setCheckOut(new Date()); // 🕒 guarda fecha y hora actual
+            session.merge(reserva);
+            tx.commit();
+        } else {
+            throw new RuntimeException("Reserva no encontrada con id: " + idReserva);
+        }
+    } catch (Exception e) {
+        if (tx != null) tx.rollback();
+        throw e;
+    }
+}
 }
