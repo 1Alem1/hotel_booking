@@ -131,4 +131,10 @@ public class ReservaService extends AbstractService {
             return query.getResultList();
         }
     }
+     
+     public Reserva getReservaPorId(Long id) {
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        return session.get(Reserva.class, id);
+    }
+}
 }

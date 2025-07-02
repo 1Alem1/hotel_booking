@@ -2,6 +2,8 @@ package com.hibernatestandalone.pantallas;
 
 import com.hibernatestandalone.HibernateStandalone.EmailService;
 import com.hibernatestandalone.HibernateStandalone.EstadoReserva;
+import com.hibernatestandalone.HibernateStandalone.GenerarDocumento;
+import com.hibernatestandalone.HibernateStandalone.GenerarPdfEmpleado;
 import com.hibernatestandalone.entity.Empleado;
 import com.hibernatestandalone.entity.Factura;
 import com.hibernatestandalone.entity.Gerente;
@@ -21,6 +23,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -1567,16 +1570,33 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         }
 
         try {
-            reservaService.hacerCheckOut(reserva.getId_reserva()); // Guarda estado y hora de salida
-            alMenosUnoProcesado = true;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al hacer check-out: " + e.getMessage());
-            e.printStackTrace();
-        }
+    reservaService.hacerCheckOut(reserva.getId_reserva());
+
+
+    reserva = reservaService.getReservaPorId(reserva.getId_reserva());
+
+    alMenosUnoProcesado = true;
+
+    Huesped huesped = reserva.getHuesped();
+    String userHome = System.getProperty("user.home");
+    String rutaFactura = userHome + File.separator + "Downloads" + File.separator + "factura_reserva_" + reserva.getId_reserva() + ".pdf";
+    Factura factura = facturaService.getFacturaPorReserva(reserva.getId_reserva());
+
+    if (factura == null) {
+        JOptionPane.showMessageDialog(this, "No se encontró la factura para la reserva.");
+        return;
     }
 
+    GenerarDocumento generador = new GenerarPdfEmpleado(reserva, huesped, factura);
+    generador.generarPdf(rutaFactura);
+    JOptionPane.showMessageDialog(this, "Factura generada correctamente en:\n" + rutaFactura);
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(this, "Error al hacer check-out: " + e.getMessage());
+    e.printStackTrace();
+    }
+    }
     if (alMenosUnoProcesado) {
-        cargarReservasEnTabla(); // Refresca tabla
+        cargarReservasEnTabla(); 
         JOptionPane.showMessageDialog(this, "Check-out realizado correctamente.");
     }
     }//GEN-LAST:event_btnCheckoutActionPerformed

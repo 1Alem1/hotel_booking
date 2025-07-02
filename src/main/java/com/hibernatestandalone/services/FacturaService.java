@@ -40,4 +40,10 @@ public class FacturaService extends AbstractService {
             throw e;
         }
     }
+    
+    public Factura getFacturaPorReserva(Long idReserva) {
+    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        return session.get(Factura.class, idReserva);
+    }
+}
 }
