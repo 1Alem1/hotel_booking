@@ -119,7 +119,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
             return column == 0;
         }
     };
-
+    
     JTableHeader header = tblHabitacionOcupada.getTableHeader();
     header.setFont(new Font("Segoe UI", Font.BOLD, 22));
     header.setForeground(Color.WHITE);
@@ -176,6 +176,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     tblHabitacionOcupada.revalidate();
     tblHabitacionOcupada.repaint();
 }
+
     
     private void aplicarFormatoTablaDisponibles() {
         JTableHeader header = tblHabitacionDisponible.getTableHeader();
@@ -305,6 +306,8 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         tblHabitacionDisponible.revalidate();
         tblHabitacionDisponible.repaint();
     }
+    
+    
 
    
     @SuppressWarnings("unchecked")
@@ -368,6 +371,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         btnCancelar = new javax.swing.JButton();
         btnCheckin = new javax.swing.JButton();
         btnCheckout = new javax.swing.JButton();
+        jPanelModificar = new javax.swing.JPanel();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -595,14 +599,14 @@ public class PantallaEmpleado extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(1217, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
 
         txtNombreHuesped.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -989,7 +993,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
                 .addComponent(btnCheckin, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(46, 46, 46)
                 .addComponent(btnCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(69, Short.MAX_VALUE))
+                .addContainerGap(764, Short.MAX_VALUE))
         );
         jPanelListarReservasLayout.setVerticalGroup(
             jPanelListarReservasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1012,6 +1016,19 @@ public class PantallaEmpleado extends javax.swing.JFrame {
                         .addGap(29, 29, 29))))
         );
 
+        jPanelModificar.setPreferredSize(new java.awt.Dimension(600, 400));
+
+        javax.swing.GroupLayout jPanelModificarLayout = new javax.swing.GroupLayout(jPanelModificar);
+        jPanelModificar.setLayout(jPanelModificarLayout);
+        jPanelModificarLayout.setHorizontalGroup(
+            jPanelModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1479, Short.MAX_VALUE)
+        );
+        jPanelModificarLayout.setVerticalGroup(
+            jPanelModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 933, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanelContenidoLayout = new javax.swing.GroupLayout(jPanelContenido);
         jPanelContenido.setLayout(jPanelContenidoLayout);
         jPanelContenidoLayout.setHorizontalGroup(
@@ -1024,6 +1041,11 @@ public class PantallaEmpleado extends javax.swing.JFrame {
                     .addGap(0, 0, 0)
                     .addComponent(jPanelReservar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGap(0, 0, 0)))
+            .addGroup(jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelContenidoLayout.createSequentialGroup()
+                    .addGap(689, 689, 689)
+                    .addComponent(jPanelModificar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanelContenidoLayout.setVerticalGroup(
             jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1033,6 +1055,11 @@ public class PantallaEmpleado extends javax.swing.JFrame {
                     .addGap(0, 0, 0)
                     .addComponent(jPanelReservar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGap(0, 0, 0)))
+            .addGroup(jPanelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelContenidoLayout.createSequentialGroup()
+                    .addGap(434, 434, 434)
+                    .addComponent(jPanelModificar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -1386,6 +1413,26 @@ public class PantallaEmpleado extends javax.swing.JFrame {
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         // TODO add your handling code here:
+        
+    int filaSeleccionada = tblHabitacionOcupada.getSelectedRow();
+
+    if (filaSeleccionada == -1) {
+        JOptionPane.showMessageDialog(this, "Debe seleccionar una reserva.");
+        return;
+    }
+
+    int filaModelo = tblHabitacionOcupada.convertRowIndexToModel(filaSeleccionada);
+    List<Reserva> reservas = reservaService.getReservasActivas();
+    Reserva reserva = reservas.get(filaModelo);
+
+    EditarReserva form = new EditarReserva(reserva, this);
+    form.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosed(java.awt.event.WindowEvent e) {
+            cargarReservasEnTabla(); // Recargá la tabla después de editar
+        }
+    });
+    form.setVisible(true);
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnCheckinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckinActionPerformed
@@ -1566,6 +1613,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelDecoracion;
     private javax.swing.JPanel jPanelListarReservas;
     private javax.swing.JPanel jPanelMenu;
+    private javax.swing.JPanel jPanelModificar;
     private javax.swing.JPanel jPanelReservar;
     private javax.swing.JButton jSalir;
     private javax.swing.JScrollPane jScrollHabitacionDisponible;
