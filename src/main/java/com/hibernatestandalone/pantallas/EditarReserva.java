@@ -18,6 +18,7 @@ public class EditarReserva extends javax.swing.JFrame {
     public EditarReserva(Reserva reserva, java.awt.Component parent) {
         this();
         this.reserva = reserva;
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(parent);
         jDateInicio.setDate(reserva.getFechaInicio());
         jDateFin.setDate(reserva.getFechaFin());
