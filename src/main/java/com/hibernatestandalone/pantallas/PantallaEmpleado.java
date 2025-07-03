@@ -1,24 +1,18 @@
 package com.hibernatestandalone.pantallas;
 
-import com.hibernatestandalone.HibernateStandalone.EmailService;
+import com.hibernatestandalone.services.EmailService;
 import com.hibernatestandalone.HibernateStandalone.EstadoReserva;
 import com.hibernatestandalone.HibernateStandalone.GenerarDocumento;
 import com.hibernatestandalone.HibernateStandalone.GenerarPdfEmpleado;
 import com.hibernatestandalone.entity.Empleado;
 import com.hibernatestandalone.entity.Factura;
-import com.hibernatestandalone.entity.Gerente;
 import com.hibernatestandalone.entity.Habitacion;
 import com.hibernatestandalone.entity.Huesped;
 import com.hibernatestandalone.entity.Reserva;
-import com.hibernatestandalone.entity.Usuario;
 import com.hibernatestandalone.services.EmpleadoService;
 import com.hibernatestandalone.services.FacturaService;
-import com.hibernatestandalone.services.GerenteService;
 import com.hibernatestandalone.services.HabitacionService;
-import com.hibernatestandalone.services.HuespedService;
 import com.hibernatestandalone.services.ReservaService;
-import com.hibernatestandalone.services.UsuarioService;
-import com.hibernatestandalone.util.HibernateUtil;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -32,34 +26,27 @@ import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 
 public class PantallaEmpleado extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(PantallaEmpleado.class.getName());
     private Long idHabitacionActual;
     private TableRowSorter<DefaultTableModel> sorterHabitacionesOcupadas;
     private TableRowSorter<DefaultTableModel> sorterHabitacionesDisponibles;
     private final HabitacionService habitacionService = new HabitacionService();
     private final ReservaService reservaService = new ReservaService();
-    private final EmpleadoService empleadoService= new EmpleadoService();
+    private final EmpleadoService empleadoService = new EmpleadoService();
     private final FacturaService facturaService = new FacturaService();
-    
 
-    
     public PantallaEmpleado(Empleado empleado) {
         initComponents();
         jPanelContenido.setVisible(false);
-     
+
         tblHabitacionDisponible.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-      
         tblHabitacionDisponible.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -72,7 +59,9 @@ public class PantallaEmpleado extends javax.swing.JFrame {
                     DefaultTableModel modelo = (DefaultTableModel) tblHabitacionDisponible.getModel();
                     int modelRow = tblHabitacionDisponible.convertRowIndexToModel(viewRow);
                     // Verificación de rango por si acaso
-                    if (modelRow < 0 || modelRow >= modelo.getRowCount()) return;
+                    if (modelRow < 0 || modelRow >= modelo.getRowCount()) {
+                        return;
+                    }
 
                     // Limpiar todos
                     for (int i = 0; i < modelo.getRowCount(); i++) {
@@ -83,7 +72,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
                 }
             }
         });
-        
+
         tblHabitacionOcupada.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -105,158 +94,160 @@ public class PantallaEmpleado extends javax.swing.JFrame {
             }
         });
         cargarReservasEnTabla();
-        
+
         lblBienvenido.setText("Bienvenido, " + empleado.getNombre() + " " + empleado.getApellido());
-        
+
     }
 
     private void cargarReservasEnTabla() {
-    DefaultTableModel modelo = new DefaultTableModel() {
-        @Override
-        public Class<?> getColumnClass(int columnIndex) {
-            return columnIndex == 0 ? Boolean.class : Object.class;
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return columnIndex == 0 ? Boolean.class : Object.class;
+            }
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column == 0;
+            }
+        };
+
+        JTableHeader header = tblHabitacionOcupada.getTableHeader();
+        header.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        header.setForeground(Color.WHITE);
+        header.setBackground(new Color(232, 130, 0));
+
+        // Nuevas columnas
+        modelo.addColumn(""); // Checkbox
+        modelo.addColumn("Número");
+        modelo.addColumn("Piso");
+        modelo.addColumn("Fecha inicio");
+        modelo.addColumn("Fecha fin");
+        modelo.addColumn("Check-in");
+        modelo.addColumn("Check-out");
+        modelo.addColumn("Huésped");
+        modelo.addColumn("Total");
+
+        // Traer reservas con estado CONFIRMADA o CHECKIN
+        List<Reserva> reservas = reservaService.getReservasActivas();
+        for (Reserva r : reservas) {
+            Habitacion h = r.getHabitacion();
+            Huesped huesped = r.getHuesped();
+            if (h != null && huesped != null) {
+                Date fInicio = r.getFechaInicio();
+                Date fFin = r.getFechaFin();
+                Date chkIn = r.getCheckIn();
+                Date chkOut = r.getCheckOut();
+
+                long dias = (fFin.getTime() - fInicio.getTime()) / (1000L * 60 * 60 * 24);
+                if (dias == 0) {
+                    dias = 1;
+                }
+                double total = dias * h.getPrecio_por_noche();
+
+                String huéspedInfo = huesped.getDni() + " / " + huesped.getEmail();
+
+                modelo.addRow(new Object[]{
+                    false,
+                    h.getNumero(),
+                    h.getPiso(),
+                    fInicio,
+                    fFin,
+                    chkIn,
+                    chkOut,
+                    huéspedInfo,
+                    total
+                });
+            }
         }
 
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return column == 0;
-        }
-    };
-    
-    JTableHeader header = tblHabitacionOcupada.getTableHeader();
-    header.setFont(new Font("Segoe UI", Font.BOLD, 22));
-    header.setForeground(Color.WHITE);
-    header.setBackground(new Color(232, 130, 0));
-
-    // Nuevas columnas
-    modelo.addColumn(""); // Checkbox
-    modelo.addColumn("Número");
-    modelo.addColumn("Piso");
-    modelo.addColumn("Fecha inicio");
-    modelo.addColumn("Fecha fin");
-    modelo.addColumn("Check-in");
-    modelo.addColumn("Check-out");
-    modelo.addColumn("Huésped");
-    modelo.addColumn("Total");
-
-    // Traer reservas con estado CONFIRMADA o CHECKIN
-    List<Reserva> reservas = reservaService.getReservasActivas();
-    for (Reserva r : reservas) {
-        Habitacion h = r.getHabitacion();
-        Huesped huesped = r.getHuesped();
-        if (h != null && huesped != null) {
-            Date fInicio = r.getFechaInicio();
-            Date fFin = r.getFechaFin();
-            Date chkIn = r.getCheckIn();
-            Date chkOut = r.getCheckOut();
-
-            long dias = (fFin.getTime() - fInicio.getTime()) / (1000L * 60 * 60 * 24);
-            if (dias == 0) dias = 1;
-            double total = dias * h.getPrecio_por_noche();
-
-            String huéspedInfo = huesped.getDni() + " / " + huesped.getEmail();
-
-            modelo.addRow(new Object[]{
-                false,
-                h.getNumero(),
-                h.getPiso(),
-                fInicio,
-                fFin,
-                chkIn,
-                chkOut,
-                huéspedInfo,
-                total
-            });
-        }
+        tblHabitacionOcupada.setModel(modelo);
+        aplicarFormatoTablaOcupadas(); 
+        
+        sorterHabitacionesOcupadas = new TableRowSorter<>(modelo);
+        sorterHabitacionesOcupadas.setRowFilter(null);
+        tblHabitacionOcupada.setRowSorter(sorterHabitacionesOcupadas);
+        tblHabitacionOcupada.getTableHeader().setReorderingAllowed(false);
+        tblHabitacionOcupada.revalidate();
+        tblHabitacionOcupada.repaint();
     }
 
-    tblHabitacionOcupada.setModel(modelo);
-    aplicarFormatoTablaOcupadas(); // suponiendo que esto ya lo tenés
-    sorterHabitacionesOcupadas = new TableRowSorter<>(modelo);
-    sorterHabitacionesOcupadas.setRowFilter(null);
-    tblHabitacionOcupada.setRowSorter(sorterHabitacionesOcupadas);
-    tblHabitacionOcupada.getTableHeader().setReorderingAllowed(false);
-    tblHabitacionOcupada.revalidate();
-    tblHabitacionOcupada.repaint();
-}
-
-    
     private void aplicarFormatoTablaDisponibles() {
         JTableHeader header = tblHabitacionDisponible.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD, 22));
         header.setForeground(Color.WHITE);
         header.setBackground(new Color(232, 130, 0));
         tblHabitacionDisponible.getTableHeader().setReorderingAllowed(false);
-        
-        tblHabitacionDisponible.getColumnModel().getColumn(0).setPreferredWidth(40); 
-        tblHabitacionDisponible.getColumnModel().getColumn(0).setMinWidth(40); 
-        tblHabitacionDisponible.getColumnModel().getColumn(0).setMaxWidth(40); 
-        tblHabitacionDisponible.getColumnModel().getColumn(0).setResizable(false); 
-        
-        tblHabitacionDisponible.getColumnModel().getColumn(1).setPreferredWidth(120);; 
-        tblHabitacionDisponible.getColumnModel().getColumn(1).setMinWidth(120);; 
-        tblHabitacionDisponible.getColumnModel().getColumn(1).setMaxWidth(120); 
-        tblHabitacionDisponible.getColumnModel().getColumn(1).setResizable(false); 
-        
-        tblHabitacionDisponible.getColumnModel().getColumn(2).setPreferredWidth(80); 
-        tblHabitacionDisponible.getColumnModel().getColumn(2).setMinWidth(80); 
-        tblHabitacionDisponible.getColumnModel().getColumn(2).setMaxWidth(80); 
-        tblHabitacionDisponible.getColumnModel().getColumn(2).setResizable(false); 
-        
-        tblHabitacionDisponible.getColumnModel().getColumn(3).setPreferredWidth(250); 
-        tblHabitacionDisponible.getColumnModel().getColumn(3).setMinWidth(250); 
-        tblHabitacionDisponible.getColumnModel().getColumn(3).setMaxWidth(250); 
-        tblHabitacionDisponible.getColumnModel().getColumn(3).setResizable(false); 
-        
-        tblHabitacionDisponible.getColumnModel().getColumn(4).setPreferredWidth(120); 
-        tblHabitacionDisponible.getColumnModel().getColumn(4).setMinWidth(120); 
-        tblHabitacionDisponible.getColumnModel().getColumn(4).setMaxWidth(120); 
-        tblHabitacionDisponible.getColumnModel().getColumn(4).setResizable(false); 
-        
+
+        tblHabitacionDisponible.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tblHabitacionDisponible.getColumnModel().getColumn(0).setMinWidth(40);
+        tblHabitacionDisponible.getColumnModel().getColumn(0).setMaxWidth(40);
+        tblHabitacionDisponible.getColumnModel().getColumn(0).setResizable(false);
+
+        tblHabitacionDisponible.getColumnModel().getColumn(1).setPreferredWidth(120);;
+        tblHabitacionDisponible.getColumnModel().getColumn(1).setMinWidth(120);;
+        tblHabitacionDisponible.getColumnModel().getColumn(1).setMaxWidth(120);
+        tblHabitacionDisponible.getColumnModel().getColumn(1).setResizable(false);
+
+        tblHabitacionDisponible.getColumnModel().getColumn(2).setPreferredWidth(80);
+        tblHabitacionDisponible.getColumnModel().getColumn(2).setMinWidth(80);
+        tblHabitacionDisponible.getColumnModel().getColumn(2).setMaxWidth(80);
+        tblHabitacionDisponible.getColumnModel().getColumn(2).setResizable(false);
+
+        tblHabitacionDisponible.getColumnModel().getColumn(3).setPreferredWidth(250);
+        tblHabitacionDisponible.getColumnModel().getColumn(3).setMinWidth(250);
+        tblHabitacionDisponible.getColumnModel().getColumn(3).setMaxWidth(250);
+        tblHabitacionDisponible.getColumnModel().getColumn(3).setResizable(false);
+
+        tblHabitacionDisponible.getColumnModel().getColumn(4).setPreferredWidth(120);
+        tblHabitacionDisponible.getColumnModel().getColumn(4).setMinWidth(120);
+        tblHabitacionDisponible.getColumnModel().getColumn(4).setMaxWidth(120);
+        tblHabitacionDisponible.getColumnModel().getColumn(4).setResizable(false);
+
         tblHabitacionDisponible.getColumnModel().getColumn(6).setMinWidth(0);
         tblHabitacionDisponible.getColumnModel().getColumn(6).setMaxWidth(0);
         tblHabitacionDisponible.getColumnModel().getColumn(6).setWidth(0);
         tblHabitacionDisponible.getColumnModel().getColumn(6).setPreferredWidth(0);
-        tblHabitacionDisponible.getColumnModel().getColumn(6).setResizable(false);  
+        tblHabitacionDisponible.getColumnModel().getColumn(6).setResizable(false);
     }
-    
-     private void aplicarFormatoTablaOcupadas() {
+
+    private void aplicarFormatoTablaOcupadas() {
         JTableHeader header = tblHabitacionOcupada.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD, 22));
         header.setForeground(Color.WHITE);
         header.setBackground(new Color(232, 130, 0));
         tblHabitacionOcupada.getTableHeader().setReorderingAllowed(false);
-        
-        tblHabitacionOcupada.getColumnModel().getColumn(0).setPreferredWidth(40); 
-        tblHabitacionOcupada.getColumnModel().getColumn(0).setMinWidth(40); 
-        tblHabitacionOcupada.getColumnModel().getColumn(0).setMaxWidth(40); 
-        tblHabitacionOcupada.getColumnModel().getColumn(0).setResizable(false); 
-        
-        tblHabitacionOcupada.getColumnModel().getColumn(1).setPreferredWidth(120);; 
-        tblHabitacionOcupada.getColumnModel().getColumn(1).setMinWidth(120);; 
-        tblHabitacionOcupada.getColumnModel().getColumn(1).setMaxWidth(120); 
-        tblHabitacionOcupada.getColumnModel().getColumn(1).setResizable(false); 
-        
-        tblHabitacionOcupada.getColumnModel().getColumn(2).setPreferredWidth(80); 
-        tblHabitacionOcupada.getColumnModel().getColumn(2).setMinWidth(80); 
-        tblHabitacionOcupada.getColumnModel().getColumn(2).setMaxWidth(80); 
-        tblHabitacionOcupada.getColumnModel().getColumn(2).setResizable(false); 
-        
-        tblHabitacionOcupada.getColumnModel().getColumn(3).setPreferredWidth(200); 
-        tblHabitacionOcupada.getColumnModel().getColumn(3).setMinWidth(200); 
-        tblHabitacionOcupada.getColumnModel().getColumn(3).setMaxWidth(200); 
-        tblHabitacionOcupada.getColumnModel().getColumn(3).setResizable(false); 
-        
-        tblHabitacionOcupada.getColumnModel().getColumn(4).setPreferredWidth(200); 
-        tblHabitacionOcupada.getColumnModel().getColumn(4).setMinWidth(200); 
-        tblHabitacionOcupada.getColumnModel().getColumn(4).setMaxWidth(200); 
+
+        tblHabitacionOcupada.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tblHabitacionOcupada.getColumnModel().getColumn(0).setMinWidth(40);
+        tblHabitacionOcupada.getColumnModel().getColumn(0).setMaxWidth(40);
+        tblHabitacionOcupada.getColumnModel().getColumn(0).setResizable(false);
+
+        tblHabitacionOcupada.getColumnModel().getColumn(1).setPreferredWidth(120);;
+        tblHabitacionOcupada.getColumnModel().getColumn(1).setMinWidth(120);;
+        tblHabitacionOcupada.getColumnModel().getColumn(1).setMaxWidth(120);
+        tblHabitacionOcupada.getColumnModel().getColumn(1).setResizable(false);
+
+        tblHabitacionOcupada.getColumnModel().getColumn(2).setPreferredWidth(80);
+        tblHabitacionOcupada.getColumnModel().getColumn(2).setMinWidth(80);
+        tblHabitacionOcupada.getColumnModel().getColumn(2).setMaxWidth(80);
+        tblHabitacionOcupada.getColumnModel().getColumn(2).setResizable(false);
+
+        tblHabitacionOcupada.getColumnModel().getColumn(3).setPreferredWidth(200);
+        tblHabitacionOcupada.getColumnModel().getColumn(3).setMinWidth(200);
+        tblHabitacionOcupada.getColumnModel().getColumn(3).setMaxWidth(200);
+        tblHabitacionOcupada.getColumnModel().getColumn(3).setResizable(false);
+
+        tblHabitacionOcupada.getColumnModel().getColumn(4).setPreferredWidth(200);
+        tblHabitacionOcupada.getColumnModel().getColumn(4).setMinWidth(200);
+        tblHabitacionOcupada.getColumnModel().getColumn(4).setMaxWidth(200);
         tblHabitacionOcupada.getColumnModel().getColumn(4).setResizable(false);
-        
-        tblHabitacionOcupada.getColumnModel().getColumn(5).setPreferredWidth(200); 
-        tblHabitacionOcupada.getColumnModel().getColumn(5).setMinWidth(200); 
-        tblHabitacionOcupada.getColumnModel().getColumn(5).setMaxWidth(200); 
-        tblHabitacionOcupada.getColumnModel().getColumn(5).setResizable(false); 
-        
+
+        tblHabitacionOcupada.getColumnModel().getColumn(5).setPreferredWidth(200);
+        tblHabitacionOcupada.getColumnModel().getColumn(5).setMinWidth(200);
+        tblHabitacionOcupada.getColumnModel().getColumn(5).setMaxWidth(200);
+        tblHabitacionOcupada.getColumnModel().getColumn(5).setResizable(false);
+
         tblHabitacionOcupada.getColumnModel().getColumn(6).setMinWidth(200);
         tblHabitacionOcupada.getColumnModel().getColumn(6).setMaxWidth(200);
         tblHabitacionOcupada.getColumnModel().getColumn(6).setWidth(200);
@@ -264,24 +255,24 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         tblHabitacionOcupada.getColumnModel().getColumn(6).setResizable(false);
     }
 
-    //Hay qeu cambiarle el sorter porque carga tablas de menos
+    
     private void cargarHabitacionesEnTabla(Date fechaInicio, Date fechaFin) {
         List<Habitacion> habitaciones = habitacionService.buscarDisponibles(fechaInicio, fechaFin);
         DefaultTableModel modelo = new DefaultTableModel(
-            new Object[]{ "", "Número", "Piso", "Capacidad", "Precio", "Descripción", "ID" },
-            0
+                new Object[]{"", "Número", "Piso", "Capacidad", "Precio", "Descripción", "ID"},
+                0
         ) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 return columnIndex == 0 ? Boolean.class : Object.class;
             }
+
             @Override
             public boolean isCellEditable(int row, int column) {
                 return column == 0;
             }
         };
 
-      
         modelo.setRowCount(0);
         for (Habitacion h : habitaciones) {
             modelo.addRow(new Object[]{
@@ -294,7 +285,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
                 h.getId()
             });
         }
-        
+
         tblHabitacionDisponible.setRowSorter(null); // Remover sorter temporalmente
         tblHabitacionDisponible.setModel(modelo);
 
@@ -309,10 +300,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         tblHabitacionDisponible.revalidate();
         tblHabitacionDisponible.repaint();
     }
-    
-    
 
-   
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1102,24 +1090,24 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnListaReservasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaReservasActionPerformed
-        jPanelContenido.setVisible(true);      
-        Color color = new Color(204,102,0);
-        Color colorOriginal = new Color(252,167,85);
+        jPanelContenido.setVisible(true);
+        Color color = new Color(204, 102, 0);
+        Color colorOriginal = new Color(252, 167, 85);
         btnListaReservas.setBackground(color);
         if (btnListaReservas.getBackground().equals(color)) {
             btnReservar.setBackground(colorOriginal);
         } else {
             btnListaReservas.setBackground(Color.RED);
-            
+
         }
         jPanelReservar.setVisible(false);
         jPanelListarReservas.setVisible(true);
     }//GEN-LAST:event_btnListaReservasActionPerformed
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
-        jPanelContenido.setVisible(true);      
-            Color color = new Color(204,102,0);
-        Color colorOriginal = new Color(252,167,85);
+        jPanelContenido.setVisible(true);
+        Color color = new Color(204, 102, 0);
+        Color colorOriginal = new Color(252, 167, 85);
         btnReservar.setBackground(color);
         if (btnReservar.getBackground().equals(color)) {
             btnListaReservas.setBackground(colorOriginal);
@@ -1144,7 +1132,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
     }//GEN-LAST:event_btnReservarActionPerformed
 
     private void jSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSalirActionPerformed
-         int respuesta = JOptionPane.showConfirmDialog(this, "¿Desea cerrar sesión?", "Cerrar sesión", JOptionPane.YES_NO_OPTION);
+        int respuesta = JOptionPane.showConfirmDialog(this, "¿Desea cerrar sesión?", "Cerrar sesión", JOptionPane.YES_NO_OPTION);
         if (respuesta == JOptionPane.YES_OPTION) {
             // Cierra la ventana actual
             this.dispose();
@@ -1177,16 +1165,16 @@ public class PantallaEmpleado extends javax.swing.JFrame {
             return;
         }
         idHabitacionActual = idSeleccionado;
-        
+
         jPanelCargarHuesped.setVisible(true);
-        
+
         jScrollHabitacionDisponible.setVisible(false);
         btnReservarHabitacion.setVisible(false);
     }//GEN-LAST:event_btnReservarHabitacionActionPerformed
 
     private void btnBuscarHabitacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarHabitacionActionPerformed
         Date fechaInicio = jFechaInicio.getDate();
-        Date fechaFin = jFechafinal.getDate(); 
+        Date fechaFin = jFechafinal.getDate();
         Date hoy = new Date();
 
         if (fechaInicio == null || fechaFin == null) {
@@ -1203,7 +1191,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No se puede buscar disponibilidad para fechas pasadas.");
             return;
         }
-        
+
         cargarHabitacionesEnTabla(fechaInicio, fechaFin);
 
     }//GEN-LAST:event_btnBuscarHabitacionActionPerformed
@@ -1226,7 +1214,7 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         if (txtDniHuesped.getText().equals("Ingrese el DNI")) {
             txtDniHuesped.setText("");
             txtDniHuesped.setForeground(Color.BLACK);
-        }    
+        }
     }//GEN-LAST:event_txtDniHuespedFocusGained
 
     private void txtDniHuespedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDniHuespedFocusLost
@@ -1242,9 +1230,9 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         btnReservarHabitacion.setVisible(true);
         jScrollHabitacionDisponible.setVisible(true);
         tblHabitacionDisponible.setVisible(true);
-        
+
         tblHabitacionDisponible.clearSelection();
-       
+
         // Limpiar ID actual
         idHabitacionActual = null;;
     }//GEN-LAST:event_btnCancelarHuespedActionPerformed
@@ -1318,7 +1306,9 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         }
 
         int confirmacion = JOptionPane.showConfirmDialog(this, "¿Deseás confirmar la reserva?", "Confirmar reserva", JOptionPane.YES_NO_OPTION);
-        if (confirmacion != JOptionPane.YES_OPTION) return;
+        if (confirmacion != JOptionPane.YES_OPTION) {
+            return;
+        }
 
         try {
             // Buscar o crear huésped
@@ -1335,9 +1325,9 @@ public class PantallaEmpleado extends javax.swing.JFrame {
             Reserva reserva = reservaService.cargarReserva(fechaInicio, fechaFin, habitacion, huesped);
 
             Factura factura = facturaService.crearYGuardarFactura(reserva, txtMetodoDePago.getText().trim());
-            
+
             JOptionPane.showMessageDialog(this, "Reserva confirmada exitosamente.");
-            
+
             new Thread(() -> {
                 try {
                     EmailService emailService = new EmailService();
@@ -1350,7 +1340,6 @@ public class PantallaEmpleado extends javax.swing.JFrame {
             // Opcional: recargar tabla de habitaciones
             cargarHabitacionesEnTabla(fechaInicio, fechaFin);
             cargarReservasEnTabla();
-            
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al guardar la reserva: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1409,199 +1398,195 @@ public class PantallaEmpleado extends javax.swing.JFrame {
         } else {
             // Buscamos en las columnas 1 a 7 (donde la 7 es Huésped: DNI/email)
             sorterHabitacionesOcupadas.setRowFilter(
-                RowFilter.regexFilter("(?i)" + Pattern.quote(filtro), 7)
+                    RowFilter.regexFilter("(?i)" + Pattern.quote(filtro), 7)
             );
         }
     }//GEN-LAST:event_btnBuscarReservaActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        // TODO add your handling code here:
-        
-    int filaSeleccionada = tblHabitacionOcupada.getSelectedRow();
-
-    if (filaSeleccionada == -1) {
-        JOptionPane.showMessageDialog(this, "Debe seleccionar una reserva.");
-        return;
-    }
-
-    int filaModelo = tblHabitacionOcupada.convertRowIndexToModel(filaSeleccionada);
-    List<Reserva> reservas = reservaService.getReservasActivas();
-    Reserva reserva = reservas.get(filaModelo);
-
-    EditarReserva form = new EditarReserva(reserva, this);
-    form.addWindowListener(new java.awt.event.WindowAdapter() {
-        @Override
-        public void windowClosed(java.awt.event.WindowEvent e) {
-            cargarReservasEnTabla(); // Recargá la tabla después de editar
+        int filaSeleccionada = tblHabitacionOcupada.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una reserva.");
+            return;
         }
-    });
-    form.setVisible(true);
+
+        int filaModelo = tblHabitacionOcupada.convertRowIndexToModel(filaSeleccionada);
+        List<Reserva> reservas = reservaService.getReservasActivas();
+        Reserva reserva = reservas.get(filaModelo);
+
+        EditarReserva form = new EditarReserva(reserva, this); // ← le pasás la reserva seleccionada
+        form.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                cargarReservasEnTabla(); // recargar la tabla al cerrar
+            }
+        });
+        form.setVisible(true);
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnCheckinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckinActionPerformed
- // Obtenemos la lista original de reservas activas (confirmadas o checkin)
-    List<Reserva> reservas = reservaService.getReservasActivas();
+        // Obtenemos la lista original de reservas activas (confirmadas o checkin)
+        List<Reserva> reservas = reservaService.getReservasActivas();
 
-    DefaultTableModel model = (DefaultTableModel) tblHabitacionOcupada.getModel();
-    List<Integer> filasSeleccionadas = new ArrayList<>();
+        DefaultTableModel model = (DefaultTableModel) tblHabitacionOcupada.getModel();
+        List<Integer> filasSeleccionadas = new ArrayList<>();
 
-    // Detectamos qué filas están seleccionadas (checkbox en columna 0)
-    for (int i = 0; i < model.getRowCount(); i++) {
-        Boolean marcado = (Boolean) model.getValueAt(i, 0);
-        if (marcado != null && marcado) {
-            filasSeleccionadas.add(i);
-        }
-    }
-
-    if (filasSeleccionadas.isEmpty()) {
-        JOptionPane.showMessageDialog(null, "Debe seleccionar al menos una reserva para hacer check-in.");
-        return;
-    }
-
-    boolean alMenosUnoProcesado = false;
-    Date hoy = new Date();
-
-    for (int filaVista : filasSeleccionadas) {
-        int filaModelo = tblHabitacionOcupada.convertRowIndexToModel(filaVista);
-        Reserva reserva = reservas.get(filaModelo);
-
-        if (reserva.getFechaInicio().after(hoy)) {
-            JOptionPane.showMessageDialog(null, "No se puede hacer el check-in antes de la fecha de inicio: " + reserva.getFechaInicio());
-            continue;
+        for (int i = 0; i < model.getRowCount(); i++) {
+            Boolean marcado = (Boolean) model.getValueAt(i, 0);
+            if (marcado != null && marcado) {
+                filasSeleccionadas.add(i);
+            }
         }
 
-        try {
-            // Actualizamos el estado a CHECK_IN y la fecha checkIn
-            reserva.setEstado(EstadoReserva.CHECK_IN);
-            reserva.setCheckIn(hoy);
-            reservaService.actualizarReserva(reserva);
-            alMenosUnoProcesado = true;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al actualizar reserva: " + e.getMessage());
-            e.printStackTrace();
+        if (filasSeleccionadas.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar al menos una reserva para hacer check-in.");
+            return;
         }
-    }
+
+        boolean alMenosUnoProcesado = false;
+        Date hoy = new Date();
+
+        for (int filaVista : filasSeleccionadas) {
+            int filaModelo = tblHabitacionOcupada.convertRowIndexToModel(filaVista);
+            Reserva reserva = reservas.get(filaModelo);
+
+            if (reserva.getFechaInicio().after(hoy)) {
+                JOptionPane.showMessageDialog(null, "No se puede hacer el check-in antes de la fecha de inicio: " + reserva.getFechaInicio());
+                continue;
+            }
+
+            try {
+                // Actualizamos el estado a CHECK_IN y la fecha checkIn
+                reserva.setEstado(EstadoReserva.CHECK_IN);
+                reserva.setCheckIn(hoy);
+                reservaService.actualizarReserva(reserva);
+                alMenosUnoProcesado = true;
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error al actualizar reserva: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
 
         if (alMenosUnoProcesado) {
-            cargarReservasEnTabla(); // Refresca la tabla para mostrar los cambios
+            cargarReservasEnTabla(); // Actualizar la tabla para mostrar los cambios
             JOptionPane.showMessageDialog(null, "Check-in realizado correctamente.");
         }
     }//GEN-LAST:event_btnCheckinActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-    List<Reserva> reservas = reservaService.getReservasActivas(); // Solo CONFIRMADA o CHECK_IN
-    DefaultTableModel model = (DefaultTableModel) tblHabitacionOcupada.getModel();
-    List<Integer> filasSeleccionadas = new ArrayList<>();
+        List<Reserva> reservas = reservaService.getReservasActivas(); // Solo CONFIRMADA o CHECK_IN
+        DefaultTableModel model = (DefaultTableModel) tblHabitacionOcupada.getModel();
+        List<Integer> filasSeleccionadas = new ArrayList<>();
 
-    for (int i = 0; i < model.getRowCount(); i++) {
-        Boolean marcado = (Boolean) model.getValueAt(i, 0);
-        if (marcado != null && marcado) {
-            filasSeleccionadas.add(i);
-        }
-    }
-
-    if (filasSeleccionadas.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Debe seleccionar al menos una reserva para cancelar.");
-        return;
-    }
-
-    int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea cancelar la reserva?", "Confirmar cancelación", JOptionPane.YES_NO_OPTION);
-    if (confirmacion != JOptionPane.YES_OPTION) return;
-
-    boolean alMenosUnaCancelada = false;
-
-    for (int fila : filasSeleccionadas) {
-        int filaModelo = tblHabitacionOcupada.convertRowIndexToModel(fila);
-        Reserva reserva = reservas.get(filaModelo);
-
-        // ✅ Validar estado
-        EstadoReserva estadoActual = reserva.getEstado();
-        if (estadoActual == EstadoReserva.CHECK_IN || estadoActual == EstadoReserva.CHECK_OUT || estadoActual == EstadoReserva.CANCELADA) {
-            JOptionPane.showMessageDialog(this,
-                "No se puede cancelar una reserva en estado " + estadoActual + ".");
-            continue;
+        for (int i = 0; i < model.getRowCount(); i++) {
+            Boolean marcado = (Boolean) model.getValueAt(i, 0);
+            if (marcado != null && marcado) {
+                filasSeleccionadas.add(i);
+            }
         }
 
-        try {
-            reserva.setEstado(EstadoReserva.CANCELADA);
-            reservaService.actualizarReserva(reserva);
-            alMenosUnaCancelada = true;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al cancelar la reserva: " + e.getMessage());
-            e.printStackTrace();
+        if (filasSeleccionadas.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar al menos una reserva para cancelar.");
+            return;
         }
-    }
 
-    if (alMenosUnaCancelada) {
-        cargarReservasEnTabla(); // Refresca
-        JOptionPane.showMessageDialog(this, "Reserva cancelada correctamente.");
-    }
+        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea cancelar la reserva?", "Confirmar cancelación", JOptionPane.YES_NO_OPTION);
+        if (confirmacion != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        boolean alMenosUnaCancelada = false;
+
+        for (int fila : filasSeleccionadas) {
+            int filaModelo = tblHabitacionOcupada.convertRowIndexToModel(fila);
+            Reserva reserva = reservas.get(filaModelo);
+
+            // ✅ Validar estado
+            EstadoReserva estadoActual = reserva.getEstado();
+            if (estadoActual == EstadoReserva.CHECK_IN || estadoActual == EstadoReserva.CHECK_OUT || estadoActual == EstadoReserva.CANCELADA) {
+                JOptionPane.showMessageDialog(this,
+                        "No se puede cancelar una reserva en estado " + estadoActual + ".");
+                continue;
+            }
+
+            try {
+                reserva.setEstado(EstadoReserva.CANCELADA);
+                reservaService.actualizarReserva(reserva);
+                alMenosUnaCancelada = true;
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al cancelar la reserva: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+        if (alMenosUnaCancelada) {
+            cargarReservasEnTabla(); // Refresca
+            JOptionPane.showMessageDialog(this, "Reserva cancelada correctamente.");
+        }
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnCheckoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckoutActionPerformed
-    List<Reserva> reservas = reservaService.getReservasActivas(); // Trae CONFIRMADA y CHECK_IN
-    DefaultTableModel model = (DefaultTableModel) tblHabitacionOcupada.getModel();
-    List<Integer> filasSeleccionadas = new ArrayList<>();
+        List<Reserva> reservas = reservaService.getReservasActivas(); // Trae CONFIRMADA y CHECK_IN
+        DefaultTableModel model = (DefaultTableModel) tblHabitacionOcupada.getModel();
+        List<Integer> filasSeleccionadas = new ArrayList<>();
 
-    // Buscar reservas marcadas
-    for (int i = 0; i < model.getRowCount(); i++) {
-        Boolean marcado = (Boolean) model.getValueAt(i, 0);
-        if (marcado != null && marcado) {
-            filasSeleccionadas.add(i);
-        }
-    }
-
-    if (filasSeleccionadas.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Debe seleccionar al menos una reserva para hacer check-out.");
-        return;
-    }
-
-    boolean alMenosUnoProcesado = false;
-
-    for (int fila : filasSeleccionadas) {
-        int filaModelo = tblHabitacionOcupada.convertRowIndexToModel(fila);
-        Reserva reserva = reservas.get(filaModelo);
-
-        // Verifica que el estado actual sea CHECK_IN
-        if (reserva.getEstado() != EstadoReserva.CHECK_IN) {
-            JOptionPane.showMessageDialog(this,
-                "La reserva seleccionada no está en estado CHECK_IN. No se puede hacer check-out.");
-            continue;
+        // Buscar reservas marcadas
+        for (int i = 0; i < model.getRowCount(); i++) {
+            Boolean marcado = (Boolean) model.getValueAt(i, 0);
+            if (marcado != null && marcado) {
+                filasSeleccionadas.add(i);
+            }
         }
 
-        try {
-    reservaService.hacerCheckOut(reserva.getId_reserva());
+        if (filasSeleccionadas.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar al menos una reserva para hacer check-out.");
+            return;
+        }
 
+        boolean alMenosUnoProcesado = false;
 
-    reserva = reservaService.getReservaPorId(reserva.getId_reserva());
+        for (int fila : filasSeleccionadas) {
+            int filaModelo = tblHabitacionOcupada.convertRowIndexToModel(fila);
+            Reserva reserva = reservas.get(filaModelo);
 
-    alMenosUnoProcesado = true;
+            // Verificar que el estado actual sea CHECK_IN
+            if (reserva.getEstado() != EstadoReserva.CHECK_IN) {
+                JOptionPane.showMessageDialog(this,
+                        "La reserva seleccionada no está en estado CHECK_IN. No se puede hacer check-out.");
+                continue;
+            }
 
-    Huesped huesped = reserva.getHuesped();
-    String userHome = System.getProperty("user.home");
-    String rutaFactura = userHome + File.separator + "Downloads" + File.separator + "factura_reserva_" + reserva.getId_reserva() + ".pdf";
-    Factura factura = facturaService.getFacturaPorReserva(reserva.getId_reserva());
+            try {
+                reservaService.hacerCheckOut(reserva.getId_reserva());
 
-    if (factura == null) {
-        JOptionPane.showMessageDialog(this, "No se encontró la factura para la reserva.");
-        return;
-    }
+                reserva = reservaService.getReservaPorId(reserva.getId_reserva());
 
-    GenerarDocumento generador = new GenerarPdfEmpleado(reserva, huesped, factura);
-    generador.generarPdf(rutaFactura);
-    JOptionPane.showMessageDialog(this, "Factura generada correctamente en:\n" + rutaFactura);
-} catch (Exception e) {
-    JOptionPane.showMessageDialog(this, "Error al hacer check-out: " + e.getMessage());
-    e.printStackTrace();
-    }
-    }
-    if (alMenosUnoProcesado) {
-        cargarReservasEnTabla(); 
-        JOptionPane.showMessageDialog(this, "Check-out realizado correctamente.");
-    }
+                alMenosUnoProcesado = true;
+
+                Huesped huesped = reserva.getHuesped();
+                String userHome = System.getProperty("user.home");
+                String rutaFactura = userHome + File.separator + "Downloads" + File.separator + "factura_reserva_" + reserva.getId_reserva() + ".pdf";
+                Factura factura = facturaService.getFacturaPorReserva(reserva.getId_reserva());
+
+                if (factura == null) {
+                    JOptionPane.showMessageDialog(this, "No se encontró la factura para la reserva.");
+                    return;
+                }
+
+                GenerarDocumento generador = new GenerarPdfEmpleado(reserva, huesped, factura);
+                generador.generarPdf(rutaFactura);
+                JOptionPane.showMessageDialog(this, "Factura generada correctamente en:\n" + rutaFactura);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al hacer check-out: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        if (alMenosUnoProcesado) {
+            cargarReservasEnTabla();
+            JOptionPane.showMessageDialog(this, "Check-out realizado correctamente.");
+        }
     }//GEN-LAST:event_btnCheckoutActionPerformed
 
-  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Check_in;

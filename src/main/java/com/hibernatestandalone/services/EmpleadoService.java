@@ -2,16 +2,14 @@ package com.hibernatestandalone.services;
 
 import com.hibernatestandalone.entity.Empleado;
 import com.hibernatestandalone.entity.Huesped;
-import com.hibernatestandalone.services.AbstractService;
 import com.hibernatestandalone.util.HibernateUtil;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-
 public class EmpleadoService extends AbstractService {
-    
+
     public List<Empleado> getAll() {
         Session session = this.getSession();
         Transaction transaction = session.beginTransaction();
@@ -19,21 +17,21 @@ public class EmpleadoService extends AbstractService {
         List<Empleado> list = session.createQuery(hql, Empleado.class).getResultList();
         return list;
     }
-    
+
     public Huesped cargarHuesped(String nombre, String apellido, String email, String dni, String telefono) {
-         Transaction transaction = null;
+        Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
             // Buscar huésped por email
             Query<Huesped> query = session.createQuery(
-                "FROM Huesped h WHERE h.email = :email", Huesped.class
+                    "FROM Huesped h WHERE h.email = :email", Huesped.class
             );
             query.setParameter("email", email.trim().toLowerCase());
             Huesped existente = query.uniqueResult();
 
             if (existente != null) {
-                return existente; // Ya existe, lo usamos
+                return existente; //
             }
 
             // Crear y guardar nuevo huésped
@@ -49,7 +47,9 @@ public class EmpleadoService extends AbstractService {
 
             return huesped;
         } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
+            if (transaction != null) {
+                transaction.rollback();
+            }
             throw e;
         }
     }

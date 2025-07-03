@@ -24,9 +24,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
 
-
 public class PantallaGerente extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(PantallaGerente.class.getName());
     private Long idEmpleadoActual;
     private Long idHabitacionActual;
@@ -35,9 +34,6 @@ public class PantallaGerente extends javax.swing.JFrame {
     private final HabitacionService habitacionService = new HabitacionService();
     private TableRowSorter<DefaultTableModel> sorterEmpleados;
     private TableRowSorter<DefaultTableModel> sorterHabitaciones;
-    
-    
-
 
     public PantallaGerente(Gerente gerente) {
         initComponents();
@@ -47,11 +43,10 @@ public class PantallaGerente extends javax.swing.JFrame {
         jPanelModificarEmpleado.setVisible(false);
         cargarEmpleadosEnTabla();
         cargarHabitacionesEnTabla();
-        
+
         lblBienvenido.setText("Bienvenido, " + gerente.getNombre() + " " + gerente.getApellido());
     }
-    
- 
+
     private void cargarEmpleadosEnTabla() {
         DefaultTableModel modelo = new DefaultTableModel() {
             @Override
@@ -68,9 +63,9 @@ public class PantallaGerente extends javax.swing.JFrame {
         };
 
         JTableHeader header = tblEmpleados.getTableHeader();
-        header.setFont(new Font("Segoe UI", Font.BOLD, 22)); 
-        header.setForeground(Color.WHITE);                  
-        header.setBackground(new Color(232,130,0));       
+        header.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        header.setForeground(Color.WHITE);
+        header.setBackground(new Color(232, 130, 0));
 
         modelo.addColumn("");
         modelo.addColumn("ID");
@@ -93,7 +88,7 @@ public class PantallaGerente extends javax.swing.JFrame {
                 e.getTelefono()
             });
         }
-        
+
         tblEmpleados.getModel().addTableModelListener(e -> {
             if (e.getColumn() == 0) { // Columna del checkbox
                 for (int i = 0; i < tblEmpleados.getRowCount(); i++) {
@@ -103,46 +98,45 @@ public class PantallaGerente extends javax.swing.JFrame {
                 }
             }
         });
-        
+
         tblEmpleados.setModel(modelo);
-        
-        tblEmpleados.getColumnModel().getColumn(0).setPreferredWidth(40); 
-        tblEmpleados.getColumnModel().getColumn(0).setMinWidth(40); 
-        tblEmpleados.getColumnModel().getColumn(0).setMaxWidth(40); 
-        tblEmpleados.getColumnModel().getColumn(0).setResizable(false); 
-        
-        tblEmpleados.getColumnModel().getColumn(1).setPreferredWidth(100); 
-        tblEmpleados.getColumnModel().getColumn(1).setMinWidth(100); 
-        tblEmpleados.getColumnModel().getColumn(1).setMaxWidth(100); 
-        tblEmpleados.getColumnModel().getColumn(1).setResizable(false); 
-        
-        tblEmpleados.getColumnModel().getColumn(2).setPreferredWidth(150); 
-        tblEmpleados.getColumnModel().getColumn(2).setMinWidth(150); 
-        tblEmpleados.getColumnModel().getColumn(2).setMaxWidth(150); 
-        tblEmpleados.getColumnModel().getColumn(2).setResizable(false); 
-        
-        tblEmpleados.getColumnModel().getColumn(3).setPreferredWidth(150); 
-        tblEmpleados.getColumnModel().getColumn(3).setMinWidth(150); 
-        tblEmpleados.getColumnModel().getColumn(3).setMaxWidth(150); 
-        tblEmpleados.getColumnModel().getColumn(3).setResizable(false); 
-        
-        tblEmpleados.getColumnModel().getColumn(4).setPreferredWidth(350); 
-        tblEmpleados.getColumnModel().getColumn(4).setMinWidth(350); 
-        tblEmpleados.getColumnModel().getColumn(4).setMaxWidth(350); 
-        tblEmpleados.getColumnModel().getColumn(4).setResizable(false); 
-        
-        tblEmpleados.getColumnModel().getColumn(5).setPreferredWidth(140); 
-        tblEmpleados.getColumnModel().getColumn(5).setMinWidth(140); 
-        tblEmpleados.getColumnModel().getColumn(5).setMaxWidth(140); 
-        tblEmpleados.getColumnModel().getColumn(5).setResizable(false); 
-        
+
+        tblEmpleados.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tblEmpleados.getColumnModel().getColumn(0).setMinWidth(40);
+        tblEmpleados.getColumnModel().getColumn(0).setMaxWidth(40);
+        tblEmpleados.getColumnModel().getColumn(0).setResizable(false);
+
+        tblEmpleados.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tblEmpleados.getColumnModel().getColumn(1).setMinWidth(100);
+        tblEmpleados.getColumnModel().getColumn(1).setMaxWidth(100);
+        tblEmpleados.getColumnModel().getColumn(1).setResizable(false);
+
+        tblEmpleados.getColumnModel().getColumn(2).setPreferredWidth(150);
+        tblEmpleados.getColumnModel().getColumn(2).setMinWidth(150);
+        tblEmpleados.getColumnModel().getColumn(2).setMaxWidth(150);
+        tblEmpleados.getColumnModel().getColumn(2).setResizable(false);
+
+        tblEmpleados.getColumnModel().getColumn(3).setPreferredWidth(150);
+        tblEmpleados.getColumnModel().getColumn(3).setMinWidth(150);
+        tblEmpleados.getColumnModel().getColumn(3).setMaxWidth(150);
+        tblEmpleados.getColumnModel().getColumn(3).setResizable(false);
+
+        tblEmpleados.getColumnModel().getColumn(4).setPreferredWidth(350);
+        tblEmpleados.getColumnModel().getColumn(4).setMinWidth(350);
+        tblEmpleados.getColumnModel().getColumn(4).setMaxWidth(350);
+        tblEmpleados.getColumnModel().getColumn(4).setResizable(false);
+
+        tblEmpleados.getColumnModel().getColumn(5).setPreferredWidth(140);
+        tblEmpleados.getColumnModel().getColumn(5).setMinWidth(140);
+        tblEmpleados.getColumnModel().getColumn(5).setMaxWidth(140);
+        tblEmpleados.getColumnModel().getColumn(5).setResizable(false);
+
         sorterEmpleados = new TableRowSorter<>(modelo);
         tblEmpleados.setRowSorter(sorterEmpleados);
         tblEmpleados.getTableHeader().setReorderingAllowed(false);
-        
-       
+
     }
-    
+
     private void cargarHabitacionesEnTabla() {
         DefaultTableModel modelo = new DefaultTableModel() {
             @Override
@@ -159,9 +153,9 @@ public class PantallaGerente extends javax.swing.JFrame {
         };
 
         JTableHeader header = tblHabitaciones.getTableHeader();
-        header.setFont(new Font("Segoe UI", Font.BOLD, 22)); // Cambia fuente y tamaño
-        header.setForeground(Color.WHITE);                  // Color del texto
-        header.setBackground(new Color(232,130,0));       // Color de fondo (azul)
+        header.setFont(new Font("Segoe UI", Font.BOLD, 22)); 
+        header.setForeground(Color.WHITE);                  
+        header.setBackground(new Color(232, 130, 0));       
 
         modelo.addColumn("");
         modelo.addColumn("Numero");
@@ -184,7 +178,7 @@ public class PantallaGerente extends javax.swing.JFrame {
                 h.getId()
             });
         }
-        
+
         tblHabitaciones.getModel().addTableModelListener(e -> {
             if (e.getColumn() == 0) { // Columna del checkbox
                 for (int i = 0; i < tblHabitaciones.getRowCount(); i++) {
@@ -194,52 +188,49 @@ public class PantallaGerente extends javax.swing.JFrame {
                 }
             }
         });
-        
+
         tblHabitaciones.setRowSorter(null); // Remover sorter temporalmente
         tblHabitaciones.setModel(modelo);
-        
-        tblHabitaciones.getColumnModel().getColumn(0).setPreferredWidth(40); 
-        tblHabitaciones.getColumnModel().getColumn(0).setMinWidth(40); 
-        tblHabitaciones.getColumnModel().getColumn(0).setMaxWidth(40); 
-        tblHabitaciones.getColumnModel().getColumn(0).setResizable(false); 
-        
-        tblHabitaciones.getColumnModel().getColumn(1).setPreferredWidth(120);; 
-        tblHabitaciones.getColumnModel().getColumn(1).setMinWidth(120);; 
-        tblHabitaciones.getColumnModel().getColumn(1).setMaxWidth(120); 
-        tblHabitaciones.getColumnModel().getColumn(1).setResizable(false); 
-        
-        tblHabitaciones.getColumnModel().getColumn(2).setPreferredWidth(80); 
-        tblHabitaciones.getColumnModel().getColumn(2).setMinWidth(80); 
-        tblHabitaciones.getColumnModel().getColumn(2).setMaxWidth(80); 
-        tblHabitaciones.getColumnModel().getColumn(2).setResizable(false); 
-        
-        tblHabitaciones.getColumnModel().getColumn(3).setPreferredWidth(250); 
-        tblHabitaciones.getColumnModel().getColumn(3).setMinWidth(250); 
-        tblHabitaciones.getColumnModel().getColumn(3).setMaxWidth(250); 
-        tblHabitaciones.getColumnModel().getColumn(3).setResizable(false); 
-        
-        tblHabitaciones.getColumnModel().getColumn(4).setPreferredWidth(120); 
-        tblHabitaciones.getColumnModel().getColumn(4).setMinWidth(120); 
-        tblHabitaciones.getColumnModel().getColumn(4).setMaxWidth(120); 
-        tblHabitaciones.getColumnModel().getColumn(4).setResizable(false); 
-        
+
+        tblHabitaciones.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tblHabitaciones.getColumnModel().getColumn(0).setMinWidth(40);
+        tblHabitaciones.getColumnModel().getColumn(0).setMaxWidth(40);
+        tblHabitaciones.getColumnModel().getColumn(0).setResizable(false);
+
+        tblHabitaciones.getColumnModel().getColumn(1).setPreferredWidth(120);;
+        tblHabitaciones.getColumnModel().getColumn(1).setMinWidth(120);;
+        tblHabitaciones.getColumnModel().getColumn(1).setMaxWidth(120);
+        tblHabitaciones.getColumnModel().getColumn(1).setResizable(false);
+
+        tblHabitaciones.getColumnModel().getColumn(2).setPreferredWidth(80);
+        tblHabitaciones.getColumnModel().getColumn(2).setMinWidth(80);
+        tblHabitaciones.getColumnModel().getColumn(2).setMaxWidth(80);
+        tblHabitaciones.getColumnModel().getColumn(2).setResizable(false);
+
+        tblHabitaciones.getColumnModel().getColumn(3).setPreferredWidth(250);
+        tblHabitaciones.getColumnModel().getColumn(3).setMinWidth(250);
+        tblHabitaciones.getColumnModel().getColumn(3).setMaxWidth(250);
+        tblHabitaciones.getColumnModel().getColumn(3).setResizable(false);
+
+        tblHabitaciones.getColumnModel().getColumn(4).setPreferredWidth(120);
+        tblHabitaciones.getColumnModel().getColumn(4).setMinWidth(120);
+        tblHabitaciones.getColumnModel().getColumn(4).setMaxWidth(120);
+        tblHabitaciones.getColumnModel().getColumn(4).setResizable(false);
+
         tblHabitaciones.getColumnModel().getColumn(6).setMinWidth(0);
         tblHabitaciones.getColumnModel().getColumn(6).setMaxWidth(0);
         tblHabitaciones.getColumnModel().getColumn(6).setWidth(0);
         tblHabitaciones.getColumnModel().getColumn(6).setPreferredWidth(0);
         tblHabitaciones.getColumnModel().getColumn(6).setResizable(false);
-        
+
         sorterHabitaciones = new TableRowSorter<>(modelo);
         tblHabitaciones.setRowSorter(sorterHabitaciones);
         tblHabitaciones.getTableHeader().setReorderingAllowed(false);
-        
-        
-      
+
         tblHabitaciones.revalidate();
         tblHabitaciones.repaint();
-  }
+    }
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -255,7 +246,6 @@ public class PantallaGerente extends javax.swing.JFrame {
         btnModificarHabitaciones = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
-        btnMiPerfil = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         lblBienvenido = new javax.swing.JLabel();
         jPanelContenido = new javax.swing.JPanel();
@@ -436,18 +426,6 @@ public class PantallaGerente extends javax.swing.JFrame {
         jPanel5.setAlignmentX(0.0F);
         jPanel5.setAlignmentY(0.0F);
 
-        btnMiPerfil.setBackground(new java.awt.Color(0, 83, 188));
-        btnMiPerfil.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        btnMiPerfil.setForeground(new java.awt.Color(255, 255, 255));
-        btnMiPerfil.setText("Mi perfil");
-        btnMiPerfil.setBorder(null);
-        btnMiPerfil.setFocusPainted(false);
-        btnMiPerfil.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMiPerfilActionPerformed(evt);
-            }
-        });
-
         btnSalir.setBackground(new java.awt.Color(204, 0, 0));
         btnSalir.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnSalir.setForeground(new java.awt.Color(255, 255, 255));
@@ -471,8 +449,6 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addGap(49, 49, 49)
                 .addComponent(lblBienvenido, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnMiPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(51, 51, 51)
                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17))
         );
@@ -482,9 +458,7 @@ public class PantallaGerente extends javax.swing.JFrame {
                 .addGap(17, 17, 17)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnSalir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnMiPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
                         .addGap(16, 16, 16))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(lblBienvenido, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1388,16 +1362,16 @@ public class PantallaGerente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCargarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarEmpleadoActionPerformed
-        Color color = new Color(204,102,0);
-        Color colorOriginal = new Color(252,167,85);
-       
+        Color color = new Color(204, 102, 0);
+        Color colorOriginal = new Color(252, 167, 85);
+
         btnCargarEmpleado.setBackground(color);
         if (btnCargarEmpleado.getBackground().equals(color)) {
-            
+
             btnModificarEmpleado.setBackground(colorOriginal);
             btnModificarHabitaciones.setBackground(colorOriginal);
             btnConsultarIngresos.setBackground(colorOriginal);
-            
+
         } else {
             btnCargarEmpleado.setBackground(Color.RED);
         }
@@ -1407,7 +1381,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         jPanelConsultarIngresos.setVisible(false);
         jPanelModificarHabitaciones.setVisible(false);
         jPanelModificarEmpleado.setVisible(false);
-        
+
     }//GEN-LAST:event_btnCargarEmpleadoActionPerformed
 
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
@@ -1479,7 +1453,7 @@ public class PantallaGerente extends javax.swing.JFrame {
     }//GEN-LAST:event_txtApellidoFocusLost
 
     private void txtEmailFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEmailFocusGained
-       if (txtEmail.getText().equals("Ingrese el correo electrónico")) {
+        if (txtEmail.getText().equals("Ingrese el correo electrónico")) {
             txtEmail.setText("");
             txtEmail.setForeground(Color.BLACK);
         }
@@ -1500,14 +1474,14 @@ public class PantallaGerente extends javax.swing.JFrame {
     }//GEN-LAST:event_txtDniFocusGained
 
     private void txtDniFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDniFocusLost
-       if (txtDni.getText().isEmpty()) {
+        if (txtDni.getText().isEmpty()) {
             txtDni.setForeground(new java.awt.Color(150, 150, 150));
             txtDni.setText("Ingrese el DNI");
         }
     }//GEN-LAST:event_txtDniFocusLost
 
     private void txtTelefonoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTelefonoFocusGained
-       if (txtTelefono.getText().equals("Ingrese el número de teléfono")) {
+        if (txtTelefono.getText().equals("Ingrese el número de teléfono")) {
             txtTelefono.setText("");
             txtTelefono.setForeground(Color.BLACK);
         }
@@ -1529,14 +1503,12 @@ public class PantallaGerente extends javax.swing.JFrame {
         String telefono = txtTelefono.getText().trim();
 
         // Validación de campos vacíos
-        if (
-            nombre.isEmpty() || nombre.equals("Ingrese el nombre") ||
-            apellido.isEmpty() || apellido.equals("Ingrese el apellido") ||
-            email.isEmpty() || email.equals("Ingrese el correo electrónico") ||
-            contrasenia.isEmpty() || contrasenia.equals("Ingrese la contraseña") ||
-            dni.isEmpty() || dni.equals("Ingrese el DNI") ||
-            telefono.isEmpty() || telefono.equals("Ingrese el número de teléfono")
-        ) {
+        if (nombre.isEmpty() || nombre.equals("Ingrese el nombre")
+                || apellido.isEmpty() || apellido.equals("Ingrese el apellido")
+                || email.isEmpty() || email.equals("Ingrese el correo electrónico")
+                || contrasenia.isEmpty() || contrasenia.equals("Ingrese la contraseña")
+                || dni.isEmpty() || dni.equals("Ingrese el DNI")
+                || telefono.isEmpty() || telefono.equals("Ingrese el número de teléfono")) {
             JOptionPane.showMessageDialog(this, "Todos los campos deben estar completos", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -1545,7 +1517,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         int respuesta = JOptionPane.showConfirmDialog(this, "¿Desea cargar el nuevo empleado?", "Confirmar acción", JOptionPane.YES_NO_OPTION);
         if (respuesta == JOptionPane.YES_OPTION) {
             try {
-                 // Asegurate de tener esta clase
+                
                 Empleado empleado = gerenteService.cargarEmpleado(nombre, apellido, email, contrasenia, dni, telefono);
                 cargarEmpleadosEnTabla();
                 JOptionPane.showMessageDialog(this, "Empleado cargado exitosamente");
@@ -1575,16 +1547,16 @@ public class PantallaGerente extends javax.swing.JFrame {
                 txtContrasenia.setEchoChar((char) 0); // Mostrar texto plano
 
             } catch (IllegalArgumentException e) {
-                
-                 JOptionPane.showMessageDialog(this, e.getMessage(),"Error", JOptionPane.WARNING_MESSAGE);
+
+                JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
             } catch (Exception e) {
-               JOptionPane.showMessageDialog(this, "Error al cargar empleado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error al cargar empleado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-         // Nombre
+        // Nombre
         txtNombre.setText("Ingrese el nombre");
         txtNombre.setForeground(new java.awt.Color(150, 150, 150));
 
@@ -1608,9 +1580,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         txtContrasenia.setText("Ingrese la contraseña");
         txtContrasenia.setForeground(new java.awt.Color(150, 150, 150));
         txtContrasenia.setEchoChar((char) 0); // Mostrar texto plano
-        
-        
-        
+
         jPanelCargarEmpleado.setVisible(false);
         jPanelConsultarIngresos.setVisible(false);
         jPanelModificarHabitaciones.setVisible(false);
@@ -1618,20 +1588,20 @@ public class PantallaGerente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnModificarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarEmpleadoActionPerformed
-        Color color = new Color(204,102,0);
-        Color colorOriginal = new Color(252,167,85);
-        
+        Color color = new Color(204, 102, 0);
+        Color colorOriginal = new Color(252, 167, 85);
+
         btnModificarEmpleado.setBackground(color);
         if (btnModificarEmpleado.getBackground().equals(color)) {
-      
+
             btnCargarEmpleado.setBackground(colorOriginal);
             btnModificarHabitaciones.setBackground(colorOriginal);
             btnConsultarIngresos.setBackground(colorOriginal);
         } else {
             btnModificarEmpleado.setBackground(Color.RED);
         }
-        
-         // Restaurar visibilidad del estado inicial
+
+        // Restaurar visibilidad del estado inicial
         jSubPanelModificarEmpleado.setVisible(false); // Ocultar formulario de modificación
         btnModificar.setVisible(true);
         btnEliminar.setVisible(true);
@@ -1639,17 +1609,13 @@ public class PantallaGerente extends javax.swing.JFrame {
         ScrollEmpleados.setVisible(true);
         txtBuscarEmpleado.setVisible(true);
         btnBuscarEmpleado.setVisible(true);
-        
+
         jSubPanelModificarEmpleado.setVisible(false);
         jPanelCargarEmpleado.setVisible(false);
         jPanelConsultarIngresos.setVisible(false);
         jPanelModificarHabitaciones.setVisible(false);
         jPanelModificarEmpleado.setVisible(true);
     }//GEN-LAST:event_btnModificarEmpleadoActionPerformed
-
-    private void btnMiPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMiPerfilActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnMiPerfilActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         int respuesta = JOptionPane.showConfirmDialog(this, "¿Desea cerrar sesión?", "Cerrar sesión", JOptionPane.YES_NO_OPTION);
@@ -1747,12 +1713,12 @@ public class PantallaGerente extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTelefonoModFocusGained
 
     private void txtTelefonoModFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTelefonoModFocusLost
-        
+
     }//GEN-LAST:event_txtTelefonoModFocusLost
 
     private void btnConfirmarModActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarModActionPerformed
-        
-        Long id = idEmpleadoActual; 
+
+        Long id = idEmpleadoActual;
         String nombre = txtNombreMod.getText();
         String apellido = txtApellidoMod.getText();
         String email = txtEmailMod.getText();
@@ -1760,38 +1726,37 @@ public class PantallaGerente extends javax.swing.JFrame {
         String telefono = txtTelefonoMod.getText();
 
         Empleado empleado = (Empleado) usuarioService.findById(id);
-        
+
         // Actualizar campos
         empleado.setNombre(nombre);
         empleado.setApellido(apellido);
         empleado.setEmail(email);
         empleado.setDni(dni);
         empleado.setTelefono(telefono);
-        
+
         // Validación de campos vacíos
-        if (
-            nombre.isEmpty() || 
-            apellido.isEmpty() || 
-            email.isEmpty() || 
-            dni.isEmpty() || 
-            telefono.isEmpty()) {
+        if (nombre.isEmpty()
+                || apellido.isEmpty()
+                || email.isEmpty()
+                || dni.isEmpty()
+                || telefono.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Todos los campos deben estar completos", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
-       int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea modificar este empleado?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-       if (confirmacion == JOptionPane.YES_OPTION) {
+
+        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea modificar este empleado?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+        if (confirmacion == JOptionPane.YES_OPTION) {
             try {
                 gerenteService.modificarEmpleado(empleado);
                 cargarEmpleadosEnTabla();
                 JOptionPane.showMessageDialog(this, "Datos actualizados correctamente.");
             } catch (IllegalArgumentException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
-            }catch (Exception e) {
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Error al modificar el empleado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-       
+
         btnBuscarEmpleado.setVisible(true);
         txtBuscarEmpleado.setVisible(true);
         jSubPanelModificarEmpleado.setVisible(false);
@@ -1810,10 +1775,10 @@ public class PantallaGerente extends javax.swing.JFrame {
         ScrollEmpleados.setVisible(true);
         txtBuscarEmpleado.setVisible(true);
         btnBuscarEmpleado.setVisible(true);
-        
+
         tblEmpleados.clearSelection();
         idEmpleadoActual = null;
-        
+
         jSubPanelModificarEmpleado.setVisible(false);
         jPanelCargarEmpleado.setVisible(false);
         jPanelConsultarIngresos.setVisible(false);
@@ -1859,11 +1824,11 @@ public class PantallaGerente extends javax.swing.JFrame {
 
     private void btnBuscarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarEmpleadoActionPerformed
         String filtro = txtBuscarEmpleado.getText().trim().toLowerCase();
-        
+
         if (filtro.isEmpty() || filtro.equalsIgnoreCase("Buscar empleado por nombre, dni, etc")) {
             sorterEmpleados.setRowFilter(null);  // Mostrar todo
         } else {
-            sorterEmpleados.setRowFilter(RowFilter.regexFilter("(?i)" + Pattern.quote(filtro), 2,3, 4, 5,6,7));
+            sorterEmpleados.setRowFilter(RowFilter.regexFilter("(?i)" + Pattern.quote(filtro), 2, 3, 4, 5, 6, 7));
         }
     }//GEN-LAST:event_btnBuscarEmpleadoActionPerformed
 
@@ -1886,16 +1851,16 @@ public class PantallaGerente extends javax.swing.JFrame {
     }//GEN-LAST:event_txtBuscarEmpleadoActionPerformed
 
     private void btnModificarHabitacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarHabitacionesActionPerformed
-        Color color = new Color(204,102,0);
-        Color colorOriginal = new Color(252,167,85);
-       
+        Color color = new Color(204, 102, 0);
+        Color colorOriginal = new Color(252, 167, 85);
+
         btnModificarHabitaciones.setBackground(color);
         if (btnModificarHabitaciones.getBackground().equals(color)) {
- 
+
             btnModificarEmpleado.setBackground(colorOriginal);
             btnConsultarIngresos.setBackground(colorOriginal);
             btnCargarEmpleado.setBackground(colorOriginal);
-            
+
         } else {
             btnCargarEmpleado.setBackground(Color.RED);
         }
@@ -1905,7 +1870,7 @@ public class PantallaGerente extends javax.swing.JFrame {
         jPanelConsultarIngresos.setVisible(false);
         jPanelModificarHabitaciones.setVisible(true);
         jPanelModificarEmpleado.setVisible(false);
-        
+
     }//GEN-LAST:event_btnModificarHabitacionesActionPerformed
 
     private void txtBuscarHabitacionFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBuscarHabitacionFocusGained
@@ -1928,11 +1893,11 @@ public class PantallaGerente extends javax.swing.JFrame {
 
     private void btnBuscarHabitacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarHabitacionActionPerformed
         String filtro = txtBuscarHabitacion.getText().trim().toLowerCase();
-        
+
         if (filtro.isEmpty() || filtro.equalsIgnoreCase("Buscar habitacion por numero, piso, etc")) {
             sorterHabitaciones.setRowFilter(null);  // Mostrar todo
         } else {
-            sorterHabitaciones.setRowFilter(RowFilter.regexFilter("(?i)" + Pattern.quote(filtro),1,2,3,4,5));
+            sorterHabitaciones.setRowFilter(RowFilter.regexFilter("(?i)" + Pattern.quote(filtro), 1, 2, 3, 4, 5));
         }
     }//GEN-LAST:event_btnBuscarHabitacionActionPerformed
 
@@ -1952,7 +1917,7 @@ public class PantallaGerente extends javax.swing.JFrame {
             Boolean seleccionado = (Boolean) tblHabitaciones.getValueAt(i, 0); // columna checkbox
             if (seleccionado != null && seleccionado) {
                 filaSeleccionada = i;
-                Object idValue = tblHabitaciones.getValueAt(i, 6); // columna del ID (ajustá el índice según donde tengas el id)
+                Object idValue = tblHabitaciones.getValueAt(i, 6); // columna del ID 
                 if (idValue instanceof Integer integer) {
                     idSeleccionado = integer.longValue();
                 } else if (idValue instanceof Long aLong) {
@@ -1977,28 +1942,27 @@ public class PantallaGerente extends javax.swing.JFrame {
         // Pedir confirmación 
         int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea modificar esta habitación?", "Confirmar modificación", JOptionPane.YES_NO_OPTION);
         if (confirmacion == JOptionPane.YES_OPTION) {
-        try {
-        
-            // Cargar habitación de la base
-            Habitacion habitacion = habitacionService.findById(idSeleccionado);
-           
+            try {
 
-            // Pedir nuevo precio (o cualquier otro dato que quieras modificar)
-            String nuevoPrecioStr = JOptionPane.showInputDialog(this, 
-                "Ingrese el nuevo precio para la habitación número " + habitacion.getNumero() + ":");
-            if (nuevoPrecioStr == null || nuevoPrecioStr.trim().isEmpty()) {
-                return; // Canceló
-            }
-            
-            double nuevoPrecio = Double.parseDouble(nuevoPrecioStr);
-            habitacion.setPrecio_por_noche(nuevoPrecio);
-            // Actualizar en BD
-            habitacionService.actualizar(habitacion);
+                // Cargar habitación de la base
+                Habitacion habitacion = habitacionService.findById(idSeleccionado);
 
-            // Refrescar tabla
-            cargarHabitacionesEnTabla();
+                // Pedir nuevo precio
+                String nuevoPrecioStr = JOptionPane.showInputDialog(this,
+                        "Ingrese el nuevo precio para la habitación número " + habitacion.getNumero() + ":");
+                if (nuevoPrecioStr == null || nuevoPrecioStr.trim().isEmpty()) {
+                    return; 
+                }
 
-            JOptionPane.showMessageDialog(this, "Habitación modificada correctamente.");
+                double nuevoPrecio = Double.parseDouble(nuevoPrecioStr);
+                habitacion.setPrecio_por_noche(nuevoPrecio);
+                // Actualizar en BD
+                habitacionService.actualizar(habitacion);
+
+                // Refrescar tabla
+                cargarHabitacionesEnTabla();
+
+                JOptionPane.showMessageDialog(this, "Habitación modificada correctamente.");
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Precio inválido. Debe ser un número.", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (Exception e) {
@@ -2008,37 +1972,37 @@ public class PantallaGerente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnModificarHabitacion1ActionPerformed
 
     private void btngenerarInformeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btngenerarInformeActionPerformed
-JFileChooser fileChooser = new JFileChooser();
-fileChooser.setDialogTitle("Seleccionar carpeta para guardar el PDF");
-fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Seleccionar carpeta para guardar el PDF");
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-int seleccion = fileChooser.showSaveDialog(this); // this = JFrame actual
+        int seleccion = fileChooser.showSaveDialog(this); // this = JFrame actual
 
-if (seleccion == JFileChooser.APPROVE_OPTION) {
-    File carpeta = fileChooser.getSelectedFile();
+        if (seleccion == JFileChooser.APPROVE_OPTION) {
+            File carpeta = fileChooser.getSelectedFile();
 
-    // Obtener fechas
-    Date desde =JfechaInicio.getDate();
-    Date hasta = Jfechafinal.getDate();
- 
-    if (desde == null || hasta == null) {
-        JOptionPane.showMessageDialog(this, "Debe seleccionar ambas fechas.", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+            // Obtener fechas
+            Date desde = JfechaInicio.getDate();
+            Date hasta = Jfechafinal.getDate();
 
-    // Lógica para generar el PDF
-    ReservaService reservaService = new ReservaService();
-    List<Object[]> datos = reservaService.getIngresosPorHabitacion(desde, hasta);
+            if (desde == null || hasta == null) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar ambas fechas.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-    String rutaArchivo = carpeta.getAbsolutePath() + File.separator + "reporte_gerente.pdf";
+            // Lógica para generar el PDF
+            ReservaService reservaService = new ReservaService();
+            List<Object[]> datos = reservaService.getIngresosPorHabitacion(desde, hasta);
 
-     GenerarDocumento generador = new GenerarPdfGerente(datos, desde, hasta);
-    generador.generarPdf(rutaArchivo);
+            String rutaArchivo = carpeta.getAbsolutePath() + File.separator + "reporte_gerente.pdf";
 
-    JOptionPane.showMessageDialog(this, "PDF generado exitosamente en:\n" + rutaArchivo);
-}        // TODO add your handling code here:
+            GenerarDocumento generador = new GenerarPdfGerente(datos, desde, hasta);
+            generador.generarPdf(rutaArchivo);
+
+            JOptionPane.showMessageDialog(this, "PDF generado exitosamente en:\n" + rutaArchivo);
+        }        // TODO add your handling code here:
     }//GEN-LAST:event_btngenerarInformeActionPerformed
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.toedter.calendar.JDateChooser JfechaInicio;
@@ -2054,7 +2018,6 @@ if (seleccion == JFileChooser.APPROVE_OPTION) {
     private javax.swing.JButton btnConfirmarMod;
     private javax.swing.JButton btnConsultarIngresos;
     private javax.swing.JButton btnEliminar;
-    private javax.swing.JButton btnMiPerfil;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnModificarEmpleado;
     private javax.swing.JButton btnModificarHabitacion1;

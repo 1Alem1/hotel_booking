@@ -1,8 +1,5 @@
-
 package com.hibernatestandalone.HibernateStandalone;
 
-import java.util.Date;
-import java.util.List;
 import com.lowagie.text.Document;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.PageSize;
@@ -25,7 +22,7 @@ public class GenerarPdfGerente extends Documento implements GenerarDocumento {
         this.desde = desde;
         this.hasta = hasta;
     }
-    
+
     @Override
     public void generarPdf(String rutaArchivo) {
         try {
@@ -65,5 +62,5 @@ public class GenerarPdfGerente extends Documento implements GenerarDocumento {
             e.printStackTrace();
         }
     }
-    
+
 }

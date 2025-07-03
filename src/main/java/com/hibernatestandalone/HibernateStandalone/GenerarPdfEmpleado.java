@@ -5,13 +5,12 @@ import com.hibernatestandalone.entity.Huesped;
 import com.hibernatestandalone.entity.Reserva;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 
 public class GenerarPdfEmpleado extends Documento implements GenerarDocumento {
 
-     private Reserva reserva;
+    private Reserva reserva;
     private Huesped huesped;
     private final Factura factura;
 
@@ -20,9 +19,10 @@ public class GenerarPdfEmpleado extends Documento implements GenerarDocumento {
         this.huesped = huesped;
         this.factura = factura;
     }
+
     @Override
     public void generarPdf(String rutaArchivo) {
-          try {
+        try {
             Document doc = new Document(PageSize.A4, 50, 50, 50, 50);
             PdfWriter.getInstance(doc, new FileOutputStream(rutaArchivo));
             doc.open();
@@ -57,10 +57,9 @@ public class GenerarPdfEmpleado extends Documento implements GenerarDocumento {
             table.addCell(new Phrase(sdf.format(reserva.getCheckOut()), normal));
 
             doc.add(new Paragraph("Forma de pago: " + factura.getMedioDePago()));
-            
+
             doc.add(new Paragraph("Total a pagar: $" + factura.getTotal()));
 
-                       
             doc.add(table);
 
             // Pie del documento
@@ -72,5 +71,5 @@ public class GenerarPdfEmpleado extends Documento implements GenerarDocumento {
         } catch (Exception e) {
             e.printStackTrace();
         }
-}
+    }
 }

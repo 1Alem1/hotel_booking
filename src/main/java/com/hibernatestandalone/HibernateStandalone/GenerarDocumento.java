@@ -1,6 +1,4 @@
-
 package com.hibernatestandalone.HibernateStandalone;
-
 
 public interface GenerarDocumento {
 

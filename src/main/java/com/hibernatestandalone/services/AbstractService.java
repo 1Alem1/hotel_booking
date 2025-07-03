@@ -5,13 +5,15 @@ import org.hibernate.Session;
 import com.hibernatestandalone.util.HibernateUtil;
 
 public abstract class AbstractService {
+
     private final SessionFactory sessionFactory;
 
-	public AbstractService() {
+    public AbstractService() {
         this.sessionFactory = HibernateUtil.getSessionFactory();
 
-	}
-	protected Session getSession() {
-		return this.sessionFactory.getCurrentSession();	
-	}
+    }
+
+    protected Session getSession() {
+        return this.sessionFactory.getCurrentSession();
+    }
 }

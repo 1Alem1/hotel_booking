@@ -1,9 +1,9 @@
-
 package com.hibernatestandalone.pantallas;
 
 import com.hibernatestandalone.entity.Reserva;
 import com.hibernatestandalone.services.ReservaService;
 import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 public class EditarReserva extends javax.swing.JFrame {
@@ -22,6 +22,7 @@ public class EditarReserva extends javax.swing.JFrame {
         jDateInicio.setDate(reserva.getFechaInicio());
         jDateFin.setDate(reserva.getFechaFin());
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -136,20 +137,48 @@ public class EditarReserva extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
-                Date nuevaInicio = jDateInicio.getDate();
+        Date nuevaInicio = jDateInicio.getDate();
         Date nuevaFin = jDateFin.getDate();
+        Date hoy = new Date();
 
-        if (nuevaInicio == null || nuevaFin == null || nuevaInicio.after(nuevaFin)) {
-            JOptionPane.showMessageDialog(this, "Fechas inválidas.");
+        if (nuevaInicio == null || nuevaFin == null) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar ambas fechas.");
             return;
         }
 
+        if (nuevaInicio.before(hoy)) {
+            JOptionPane.showMessageDialog(this, "La fecha de inicio no puede ser anterior a hoy.");
+            return;
+        }
+
+        if (!nuevaFin.after(nuevaInicio)) {
+            JOptionPane.showMessageDialog(this, "La fecha de fin debe ser posterior a la de inicio.");
+            return;
+        }
+
+        // Validar disponibilidad
+        Long idHabitacion = (long) reserva.getHabitacion().getId();
+        List<Reserva> reservasDeHabitacion = reservaService.getReservasPorHabitacion(idHabitacion);
+
+        for (Reserva r : reservasDeHabitacion) {
+            if (!r.getId_reserva().equals(reserva.getId_reserva())) { // ignorar la misma reserva que estamos modificando
+                Date inicioExistente = r.getFechaInicio();
+                Date finExistente = r.getFechaFin();
+
+                boolean seSolapan = !(nuevaFin.before(inicioExistente) || nuevaInicio.after(finExistente));
+                if (seSolapan) {
+                    JOptionPane.showMessageDialog(this, "La habitación no está disponible en ese rango de fechas.");
+                    return;
+                }
+            }
+        }
+
+        
         reserva.setFechaInicio(nuevaInicio);
         reserva.setFechaFin(nuevaFin);
-
         reservaService.actualizarReserva(reserva);
-        JOptionPane.showMessageDialog(this, "Reserva actualizada.");
+
+        JOptionPane.showMessageDialog(this, "Reserva actualizada con éxito.");
         dispose();
     }//GEN-LAST:event_btnGuardarActionPerformed
 

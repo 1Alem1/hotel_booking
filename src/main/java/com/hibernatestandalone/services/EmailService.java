@@ -1,7 +1,4 @@
-
-package com.hibernatestandalone.HibernateStandalone;
-
-   
+package com.hibernatestandalone.services;
 
 import com.hibernatestandalone.entity.Factura;
 import com.hibernatestandalone.entity.Huesped;
@@ -12,8 +9,8 @@ import java.util.Properties;
 
 public class EmailService {
 
-    private final String remitente = "facundotestaperea@gmail.com"; // Cambiá por tu email
-    private final String clave = "dmju lamw ervr ejec"; // Usá clave de aplicación en Gmail
+    private final String remitente = "facundotestaperea@gmail.com"; 
+    private final String clave = "dmju lamw ervr ejec"; 
 
     public void enviarCorreoReserva(Huesped huesped, Reserva reserva, Factura factura) throws MessagingException {
         Properties props = new Properties();
@@ -47,4 +44,3 @@ public class EmailService {
         Transport.send(mensaje);
     }
 }
-

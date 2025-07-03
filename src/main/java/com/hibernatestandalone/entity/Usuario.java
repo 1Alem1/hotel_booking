@@ -11,76 +11,71 @@ import jakarta.persistence.InheritanceType;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Usuario {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id_usuario;
-	private String nombre;
-	private String apellido;
-	@Column(unique = true)
-	private String email;
-	private String contrasenia;
-        private String dni;
-	private String telefono;
 
-        public int getId_usuario() {
-            return id_usuario;
-        }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id_usuario;
+    private String nombre;
+    private String apellido;
+    @Column(unique = true)
+    private String email;
+    private String contrasenia;
+    private String dni;
+    private String telefono;
 
-        public void setId_usuario(int id_usuario) {
-            this.id_usuario = id_usuario;
-        }
+    public int getId_usuario() {
+        return id_usuario;
+    }
 
-        public String getNombre() {
-            return nombre;
-        }
+    public void setId_usuario(int id_usuario) {
+        this.id_usuario = id_usuario;
+    }
 
-        public void setNombre(String nombre) {
-            this.nombre = nombre;
-        }
+    public String getNombre() {
+        return nombre;
+    }
 
-        public String getApellido() {
-            return apellido;
-        }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-        public void setApellido(String apellido) {
-            this.apellido = apellido;
-        }
+    public String getApellido() {
+        return apellido;
+    }
 
-        public String getEmail() {
-            return email;
-        }
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
 
-        public void setEmail(String email) {
-            this.email = email;
-        }
+    public String getEmail() {
+        return email;
+    }
 
-        public String getContrasenia() {
-            return contrasenia;
-        }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-        public void setContrasenia(String contrasenia) {
-            this.contrasenia = contrasenia;
-        }
+    public String getContrasenia() {
+        return contrasenia;
+    }
 
-        public String getDni() {
-            return dni;
-        }
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
+    }
 
-        public void setDni(String dni) {
-            this.dni = dni;
-        }
+    public String getDni() {
+        return dni;
+    }
 
-        public String getTelefono() {
-            return telefono;
-        }
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
 
-        public void setTelefono(String telefono) {
-            this.telefono = telefono;
-        }
-        
-	@Override
-	public String toString() {
-		return "Nombre: "+this.getNombre()+". Apellido: "+ this.getApellido();
-	}
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
 }
-

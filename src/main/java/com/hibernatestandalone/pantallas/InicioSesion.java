@@ -1,4 +1,3 @@
-
 package com.hibernatestandalone.pantallas;
 
 import com.hibernatestandalone.entity.Empleado;
@@ -8,12 +7,10 @@ import com.hibernatestandalone.services.UsuarioService;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 
-
 public class InicioSesion extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(InicioSesion.class.getName());
 
-  
     public InicioSesion() {
         initComponents();
         this.setFocusable(true);
@@ -21,10 +18,7 @@ public class InicioSesion extends javax.swing.JFrame {
         lblCargando.setVisible(false);
         txtContrasenia.setEchoChar((char) 0);
     }
-    
-    
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -219,7 +213,7 @@ public class InicioSesion extends javax.swing.JFrame {
 
                     if (usuario != null) {
                         if (usuario instanceof Gerente) {
-                            PantallaGerente pantalla = new PantallaGerente((Gerente)usuario);
+                            PantallaGerente pantalla = new PantallaGerente((Gerente) usuario);
                             pantalla.setVisible(true);
                             pantalla.setLocationRelativeTo(null);
                             dispose();

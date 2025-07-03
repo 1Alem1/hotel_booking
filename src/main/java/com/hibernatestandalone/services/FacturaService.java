@@ -7,14 +7,16 @@ import com.hibernatestandalone.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-
 public class FacturaService extends AbstractService {
+
     public Factura crearYGuardarFactura(Reserva reserva, String medioPago) {
         // 1) cálculo de noches
         long millisPorNoche = 1000L * 60 * 60 * 24;
         long diff = reserva.getFechaFin().getTime() - reserva.getFechaInicio().getTime();
         long noches = diff / millisPorNoche;
-        if (noches < 1) noches = 1;
+        if (noches < 1) {
+            noches = 1;
+        }
 
         // 2) precio y total
         double precioNoche = reserva.getHabitacion().getPrecio_por_noche();
@@ -27,8 +29,7 @@ public class FacturaService extends AbstractService {
         factura.setReserva(reserva);
         reserva.setFactura(factura);
 
-        // 4) persistir factura (cascade en reserva NO se activa aquí,
-        //    así que guardamos la factura directamente)
+        // 4) persistir factura 
         Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
@@ -36,14 +37,16 @@ public class FacturaService extends AbstractService {
             tx.commit();
             return factura;
         } catch (Exception e) {
-            if (tx != null) tx.rollback();
+            if (tx != null) {
+                tx.rollback();
+            }
             throw e;
         }
     }
-    
+
     public Factura getFacturaPorReserva(Long idReserva) {
-    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-        return session.get(Factura.class, idReserva);
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(Factura.class, idReserva);
+        }
     }
-}
 }

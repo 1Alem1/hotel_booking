@@ -1,7 +1,5 @@
 package com.hibernatestandalone.entity;
 
-import java.util.Date;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -12,76 +10,77 @@ import java.util.List;
 
 @Entity
 public class Habitacion {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-        private int id;
-        
-        @Column(unique = true)
-	private String numero;
-        
-	private int piso;
-	private int capacidad_personas;
-        private double precio_por_noche;
-        private String descripcion;
-        
-        @OneToMany(mappedBy = "habitacion")// Puede servir para ver todas las reservas de una habitacion
-        private List<Reserva> reservas;
 
-        public int getId() {
-            return id;
-        }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-        public void setId(int id) {
-            this.id = id;
-        }
+    @Column(unique = true)
+    private String numero;
 
-        public String getNumero() {
-            return numero;
-        }
+    private int piso;
+    private int capacidad_personas;
+    private double precio_por_noche;
+    private String descripcion;
 
-        public void setNumero(String numero) {
-            this.numero = numero;
-        }
+    @OneToMany(mappedBy = "habitacion")// Puede servir para ver todas las reservas de una habitacion
+    private List<Reserva> reservas;
 
-        public int getPiso() {
-            return piso;
-        }
+    public int getId() {
+        return id;
+    }
 
-        public void setPiso(int piso) {
-            this.piso = piso;
-        }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-        public int getCapacidad_personas() {
-            return capacidad_personas;
-        }
+    public String getNumero() {
+        return numero;
+    }
 
-        public void setCapacidad_personas(int capacidad_personas) {
-            this.capacidad_personas = capacidad_personas;
-        }
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
 
-        public double getPrecio_por_noche() {
-            return precio_por_noche;
-        }
+    public int getPiso() {
+        return piso;
+    }
 
-        public void setPrecio_por_noche(double precio_por_noche) {
-            this.precio_por_noche = precio_por_noche;
-        }
+    public void setPiso(int piso) {
+        this.piso = piso;
+    }
 
-        public String getDescripcion() {
-            return descripcion;
-        }
+    public int getCapacidad_personas() {
+        return capacidad_personas;
+    }
 
-        public void setDescripcion(String descripcion) {
-            this.descripcion = descripcion;
-        }
+    public void setCapacidad_personas(int capacidad_personas) {
+        this.capacidad_personas = capacidad_personas;
+    }
 
-        public List<Reserva> getReservas() {
-            return reservas;
-        }
+    public double getPrecio_por_noche() {
+        return precio_por_noche;
+    }
 
-        public void setReservas(List<Reserva> reservas) {
-            this.reservas = reservas;
-        }
+    public void setPrecio_por_noche(double precio_por_noche) {
+        this.precio_por_noche = precio_por_noche;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public List<Reserva> getReservas() {
+        return reservas;
+    }
+
+    public void setReservas(List<Reserva> reservas) {
+        this.reservas = reservas;
+    }
 
     public Object getCapacidad() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -91,5 +90,3 @@ public class Habitacion {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
-
-
