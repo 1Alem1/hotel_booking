@@ -1902,6 +1902,19 @@ public class PantallaGerente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarHabitacionActionPerformed
 
     private void btnConsultarIngresosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarIngresosActionPerformed
+        Color color = new Color(204, 102, 0);
+        Color colorOriginal = new Color(252, 167, 85);
+
+        btnConsultarIngresos.setBackground(color);
+        if (btnConsultarIngresos.getBackground().equals(color)) {
+
+            btnCargarEmpleado.setBackground(colorOriginal);
+            btnModificarHabitaciones.setBackground(colorOriginal);
+            btnModificarEmpleado.setBackground(colorOriginal);
+        } else {
+            btnConsultarIngresos.setBackground(Color.RED);
+        }
+        
         jPanelCargarEmpleado.setVisible(false);
         jPanelConsultarIngresos.setVisible(true);
         jPanelModificarHabitaciones.setVisible(false);
