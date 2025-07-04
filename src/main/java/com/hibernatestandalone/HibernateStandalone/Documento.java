@@ -12,7 +12,7 @@ public class Documento {
             throw new RuntimeException("No se encontró la imagen Logo.png en el classpath");
         }
         Image logo = Image.getInstance(logoUrl);
-        logo.scaleAbsolute(60f, 60f);
+        logo.scaleAbsolute(120f, 120f);
 
         Paragraph tituloDoc = new Paragraph(titulo.toUpperCase(), FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16));
         tituloDoc.setAlignment(Element.ALIGN_CENTER);
